@@ -21,6 +21,10 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     private bool canRoll = true;
     private float rollTimer = 0f;
     private Vector2 rollDirection;
+
+    private Vector3 lastDirection = Vector3.right; // 初始面向右
+    private const float minRotationThreshold = 1f; // 角度阈值（单位：角度）
+
     // Start is called before the first frame update
     void Start()
     {
