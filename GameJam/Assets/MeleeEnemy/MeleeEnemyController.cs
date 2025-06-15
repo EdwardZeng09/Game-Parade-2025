@@ -14,7 +14,8 @@ public class MeleeEnemyController : MonoBehaviour
 
     [Header("¹¥»÷")]
     //[SerializeField] private bool isAttack = true;
-    [SerializeField] private float attackCoolDuration = 1;
+    //[SerializeField] private float attackCoolDuration = 1;
+    [SerializeField] public float damage = 10f;
 
     private bool isDead;
     private void Awake()
@@ -77,5 +78,15 @@ public class MeleeEnemyController : MonoBehaviour
     {
         animator.SetBool("isRun", MovementInput.magnitude > 0);
         animator.SetBool("isDead", isDead);
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        IDamageable target = other.GetComponent<IDamageable>();
+        if (target != null)
+        {
+            target.TakeDamage(damage);
+           
+        }
     }
 }

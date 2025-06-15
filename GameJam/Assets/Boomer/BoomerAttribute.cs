@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BoomerAttribute : MonoBehaviour
+public class BoomerAttribute : Character
 {
     public UnityEvent<Vector2> OnMovementInput;
 
@@ -12,6 +12,17 @@ public class BoomerAttribute : MonoBehaviour
     [SerializeField] public Transform Player;
 
     [SerializeField] public float attackDistance = 0.8f;
+    private void Awake()
+    {
+        if (Player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+            }
+        }
+    }
     void Update()
     {
         if (Player == null)

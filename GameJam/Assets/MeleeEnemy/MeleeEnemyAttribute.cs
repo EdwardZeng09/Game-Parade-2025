@@ -10,8 +10,19 @@ public class MeleeEnemyAttribute : Character
     [SerializeField] public Transform Player;
 
     [SerializeField] public float damage;
- 
 
+
+    private void Awake()
+    {
+        if (Player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+            }
+        }
+    }
     void Update()
     {
         if (Player == null)

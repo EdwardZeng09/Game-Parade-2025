@@ -58,7 +58,7 @@ public class RangedEnemyController : MonoBehaviour
     public void Attack()
     {
         if (isAttack)
-        {
+        { 
             isAttack = false;
             Vector2 direction = (Player.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -72,6 +72,9 @@ public class RangedEnemyController : MonoBehaviour
 
         //animator.SetTrigger("isAttack");//或者bool类型触发动画
         Instantiate(projectile, shotPoint.position, rotation);
+        //GameObject bulletObj = Instantiate(projectile, shotPoint.position, rotation);
+        //Bullet bullet = bulletObj.GetComponent<Bullet>();
+        //bullet.SetDirection((Player.position - transform.position).normalized);
         yield return new WaitForSeconds(attackCoolDuration);
         isAttack = true;
     }
