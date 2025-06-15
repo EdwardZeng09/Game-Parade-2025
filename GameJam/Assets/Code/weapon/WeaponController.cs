@@ -13,9 +13,10 @@ public class WeaponController : MonoBehaviour
     public float currentHeat = 0f;
     public float maxHeat = 100f;
     public float heatPerShot = 5f;
-    public float coolRate = 0.1f;
     public bool isOverheated = false;
-
+    public float coolInterval = 2f;
+    public float coolAmountPerTick = 5f; 
+    private float coolTimer = 0f;
     void Update()
     {
         fireCooldown -= Time.deltaTime;
@@ -25,18 +26,27 @@ public class WeaponController : MonoBehaviour
             Shoot();
             fireCooldown = fireRate;
         }
+        Debug.Log($"µ±Ç°ÎÂ¶È: {currentHeat}");
     }
 
     private void HandleCooling()
     {
         if (currentHeat > 0)
         {
-            currentHeat -= coolRate * Time.deltaTime;
-            currentHeat = Mathf.Clamp(currentHeat, 0, maxHeat);
+            float currentInterval = isOverheated ? 0.5f : coolInterval;
 
-            if (isOverheated && currentHeat <= 0f)
+            coolTimer += Time.deltaTime;
+
+            if (coolTimer >= currentInterval)
             {
-                isOverheated = false;
+                currentHeat -= coolAmountPerTick;
+                currentHeat = Mathf.Clamp(currentHeat, 0, maxHeat);
+                coolTimer = 0f;
+
+                if (isOverheated && currentHeat <= 0)
+                {
+                    isOverheated = false;
+                }
             }
         }
     }
@@ -48,10 +58,14 @@ public class WeaponController : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         bullet.GetComponent<Bullet>().SetDirection(fireDirection);
 
-        currentHeat += heatPerShot;
-        if (currentHeat >= maxHeat)
+
+        if (currentHeat == maxHeat)
         {
             isOverheated = true;
+        }
+        else
+        {
+            currentHeat += heatPerShot;
         }
     }
 
