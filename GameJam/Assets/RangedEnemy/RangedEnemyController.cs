@@ -27,6 +27,7 @@ public class RangedEnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        isAttack = true;
     }
 
     private void FixedUpdate()
@@ -58,18 +59,19 @@ public class RangedEnemyController : MonoBehaviour
     {
         if (isAttack)
         {
+            isAttack = false;
             Vector2 direction = (Player.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion rotation = Quaternion.Euler(0, 0, angle);
-            isAttack = false;
             StartCoroutine(AttackCoroutine(rotation));
         }
     }
 
     IEnumerator AttackCoroutine(Quaternion rotation)
     {
+
         //animator.SetTrigger("isAttack");//或者bool类型触发动画
-        Instantiate(projectile, shotPoint.position,rotation);
+        Instantiate(projectile, shotPoint.position, rotation);
         yield return new WaitForSeconds(attackCoolDuration);
         isAttack = true;
     }
