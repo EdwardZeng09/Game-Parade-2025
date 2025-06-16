@@ -71,6 +71,7 @@ public class MeleeEnemyController : MonoBehaviour
     }
     public void Dead()
     {
+        DropManager.Instance.Drop(transform.position);
         isDead = true;
     }
 

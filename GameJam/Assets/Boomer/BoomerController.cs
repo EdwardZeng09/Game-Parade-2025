@@ -112,6 +112,7 @@ public class BoomerController : MonoBehaviour
     }
     public void Dead()
     {
+        DropManager.Instance.Drop(transform.position);
         isDead = true;
         Destroy(this.gameObject);
     }
