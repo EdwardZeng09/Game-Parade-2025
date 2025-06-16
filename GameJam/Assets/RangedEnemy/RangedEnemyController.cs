@@ -28,6 +28,15 @@ public class RangedEnemyController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         isAttack = true;
+            if (Player == null)
+            {
+                GameObject playerObj = GameObject.FindWithTag("Player");
+                if (playerObj != null)
+                {
+                    Player = playerObj.transform;
+                }
+            }
+        
     }
 
     private void FixedUpdate()
