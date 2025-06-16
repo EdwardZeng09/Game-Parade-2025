@@ -476,10 +476,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 0}
-  Enemies:
-  - {fileID: 1930687454630909917, guid: 965e0deee29c6114189fb697be8d0410, type: 3}
-  - {fileID: 5010904795006189095, guid: 08733b1e3b11eab4a8d08ad1869560df, type: 3}
-  - {fileID: 35023809186080666, guid: 70f8fc797516ff24489623effe74b2ab, type: 3}
+  enemies:
+  - prefab: {fileID: 35023809186080666, guid: 70f8fc797516ff24489623effe74b2ab, type: 3}
+    weight: 38
+  - prefab: {fileID: 1930687454630909917, guid: 965e0deee29c6114189fb697be8d0410, type: 3}
+    weight: 19
+  - prefab: {fileID: 5010904795006189095, guid: 08733b1e3b11eab4a8d08ad1869560df, type: 3}
+    weight: 35
+  spawnChange: 1
   spawnDelay: 5
   spawnTimer: 0
   Num: 2

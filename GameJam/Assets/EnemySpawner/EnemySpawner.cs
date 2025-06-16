@@ -7,8 +7,10 @@ using UnityEngine.Tilemaps;
 public class EnemySpawner : MonoBehaviour
 {
     public Tilemap tilemap;
-    public List<GameObject> Enemies = new List<GameObject>();
-
+    [Header("怪物刷新配比")]
+    public List<Enemies> enemies;
+    [Range(0, 1f)]
+    public float spawnChange = 1f;
     private List<Vector3> TileWorldPos = new List<Vector3>();
     private int TileCount;
     private int EnemyCount;
@@ -39,7 +41,7 @@ public class EnemySpawner : MonoBehaviour
 
 
         TileCount = TileWorldPos.Count;
-        EnemyCount = Enemies.Count;
+        EnemyCount = enemies.Count;
     }
 
     // Update is called once per frame
@@ -55,19 +57,45 @@ public class EnemySpawner : MonoBehaviour
                 //随机选择一个地点
                 int aRandomTile = Random.Range(0, TileCount);
                 Vector3 spawnPos = TileWorldPos[aRandomTile];
-
-                //随机选择一个敌人
-                int aRandomEnemy = Random.Range(0, EnemyCount);
-                GameObject spawnRes = Enemies[aRandomEnemy];
-
-                //生成敌人
-                Instantiate(spawnRes, spawnPos, Quaternion.identity);
-                spawnTimer = spawnDelay;
+                //刷新敌人
+                SpawnEnemy(spawnPos);
             }
-            i = 1;
 
+            spawnTimer = spawnDelay;
         }
 
+    }
 
+
+    //加权刷新敌人方法
+    public void SpawnEnemy(Vector3 spawnPos)
+    {
+        if (Random.value > spawnChange)
+            return;
+        int totalWeight = 0;
+        foreach (var enemy in enemies)
+        {
+            totalWeight += enemy.weight;
+        }
+        if (totalWeight == 0) return;//未给敌人添加权重
+
+        int rand = Random.Range(0, totalWeight);
+        int current = 0;
+        foreach (var enemy in enemies)
+        {
+            current += enemy.weight;
+            if (rand < current)
+            {
+                Instantiate(enemy.prefab, spawnPos, Quaternion.identity);
+                break;
+            }
+        }
+    }
+    [System.Serializable]
+    public class Enemies
+    {
+        public GameObject prefab;
+        [Range(0, 100)]
+        public int weight;
     }
 }
