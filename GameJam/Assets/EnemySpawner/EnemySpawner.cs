@@ -14,58 +14,60 @@ public class EnemySpawner : MonoBehaviour
     private int EnemyCount;
 
 
-    [SerializeField]public float spawnDelay=1f;
-    [SerializeField]public float spawnTimer=0f;
+    [SerializeField] public float spawnDelay = 1f;
+    [SerializeField] public float spawnTimer = 0f;
 
     [SerializeField] public int Num;
     void Start()
     {
-    tilemap= GetComponent<Tilemap>();
-    Vector3Int tmOrg = tilemap.origin;
-    Vector3Int tmSz= tilemap.size;
-
-        //初始化数组
-        for (int x = tmOrg.x; x < tmSz.x; x++) 
+        tilemap = GetComponent<Tilemap>();
+        BoundsInt bounds = tilemap.cellBounds;
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
-            for (int y = tmOrg.y; y < tmSz.y; y++)
-            
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
-                Vector3 cellToWorldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));//转化为世界坐标
-                TileWorldPos.Add(cellToWorldPos);
-
+                Vector3Int cell = new Vector3Int(x, y, 0);
+                if (tilemap.HasTile(cell))
+                {
+                    Vector3 worldPos = tilemap.GetCellCenterWorld(cell);
+                    TileWorldPos.Add(worldPos);
+                }
             }
         }
 
-        TileCount=TileWorldPos.Count;
-        EnemyCount=Enemies.Count;
+        //初始化数组
+
+
+        TileCount = TileWorldPos.Count;
+        EnemyCount = Enemies.Count;
     }
 
     // Update is called once per frame
     void Update()
     {
         //每隔一段时间
-        spawnTimer-=Time.deltaTime;
-        if (spawnTimer < 0f) 
+        spawnTimer -= Time.deltaTime;
+        if (spawnTimer < 0f)
         {
             int i = 1;
-            for (; i <=Num; i++) 
+            for (; i <= Num; i++)
             {
-             //随机选择一个地点
-        int aRandomTile=Random.Range(0,TileCount);
-        Vector3 spawnPos = TileWorldPos[aRandomTile];
+                //随机选择一个地点
+                int aRandomTile = Random.Range(0, TileCount);
+                Vector3 spawnPos = TileWorldPos[aRandomTile];
 
-        //随机选择一个敌人
-        int aRandomEnemy=Random.Range(0,EnemyCount);
-        GameObject spawnRes=Enemies[aRandomEnemy];
+                //随机选择一个敌人
+                int aRandomEnemy = Random.Range(0, EnemyCount);
+                GameObject spawnRes = Enemies[aRandomEnemy];
 
-        //生成敌人
-        Instantiate(spawnRes,spawnPos,Quaternion.identity);
-        spawnTimer=spawnDelay;
+                //生成敌人
+                Instantiate(spawnRes, spawnPos, Quaternion.identity);
+                spawnTimer = spawnDelay;
             }
             i = 1;
-       
+
         }
-       
-     
+
+
     }
 }
