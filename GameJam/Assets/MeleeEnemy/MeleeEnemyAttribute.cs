@@ -12,6 +12,10 @@ public class MeleeEnemyAttribute : Character
     [SerializeField] public float damage;
 
 
+    [SerializeField] private float separationRadius = 1f;
+    [SerializeField] private float separationForceScale = 1f;
+
+
     private void Awake()
     {
         if (Player == null)
@@ -19,7 +23,7 @@ public class MeleeEnemyAttribute : Character
             GameObject playerObj = GameObject.FindWithTag("Player");
             if (playerObj != null)
             {
-                Player = playerObj.transform;
+                Player = playerObj.transform; 
             }
         }
     }
@@ -29,6 +33,7 @@ public class MeleeEnemyAttribute : Character
             return;
         float distance = Vector2.Distance(Player.position, transform.position);
             Vector2 direction = Player.position - transform.position;
+        direction += GetSeparationForce();
             OnMovementInput?.Invoke(direction.normalized);
     }
 
@@ -40,4 +45,24 @@ public class MeleeEnemyAttribute : Character
             //调用玩家受击函数
         }
     }
+
+    private Vector2 GetSeparationForce() 
+    {
+    Vector2 force = Vector2.zero;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, separationRadius);
+        foreach (var hit in hits) 
+        {
+            if (hit.gameObject == this.gameObject) continue;
+            if (!hit.CompareTag("Enemy")) continue;
+
+            Vector2 diff = (Vector2)(transform.position - hit.transform.position);
+            float distance= diff.magnitude;
+            if (distance > 0f) 
+            {
+                force += diff.normalized / distance;
+            }
+        }
+        return force*separationForceScale;
+    }
+
 }

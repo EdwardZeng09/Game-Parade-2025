@@ -22,12 +22,16 @@ public class EnemyBullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        IDamageable target = other.GetComponent<IDamageable>();
-        if (target != null)
+        if (other.CompareTag("Player")) 
         {
-            target.TakeDamage(damage);
-            Destroy(gameObject);
+             IDamageable target = other.GetComponent<IDamageable>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+                Destroy(gameObject);
+            }
         }
+       
     }
 
 }

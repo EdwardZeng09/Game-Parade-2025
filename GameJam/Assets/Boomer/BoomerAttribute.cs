@@ -12,6 +12,9 @@ public class BoomerAttribute : Character
     [SerializeField] public Transform Player;
 
     [SerializeField] public float attackDistance = 0.8f;
+
+    [SerializeField] private float separationRadius = 1f;
+    [SerializeField] private float separationForceScale = 1f;
     private void Awake()
     {
         if (Player == null)
@@ -38,8 +41,29 @@ public class BoomerAttribute : Character
         {
             //¼ÌÐø×·»÷
             Vector2 direction = Player.position - transform.position;
+            direction += GetSeparationForce();
             OnMovementInput?.Invoke(direction.normalized);
         }
     }
-   
+
+
+    private Vector2 GetSeparationForce()
+    {
+        Vector2 force = Vector2.zero;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, separationRadius);
+        foreach (var hit in hits)
+        {
+            if (hit.gameObject == this.gameObject) continue;
+            if (!hit.CompareTag("Enemy")) continue;
+
+            Vector2 diff = (Vector2)(transform.position - hit.transform.position);
+            float distance = diff.magnitude;
+            if (distance > 0f)
+            {
+                force += diff.normalized / distance;
+            }
+        }
+        return force * separationForceScale;
+    }
+
 }

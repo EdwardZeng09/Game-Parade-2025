@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2809602822412260741}
   m_Layer: 0
   m_Name: Boomer
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

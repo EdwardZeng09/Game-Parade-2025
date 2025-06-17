@@ -79,11 +79,8 @@ public class RangedEnemyController : MonoBehaviour
     IEnumerator AttackCoroutine(Quaternion rotation)
     {
 
-        //animator.SetTrigger("isAttack");//或者bool类型触发动画
+        animator.SetTrigger("isAttack");//或者bool类型触发动画
         Instantiate(projectile, shotPoint.position, rotation);
-        //GameObject bulletObj = Instantiate(projectile, shotPoint.position, rotation);
-        //Bullet bullet = bulletObj.GetComponent<Bullet>();
-        //bullet.SetDirection((Player.position - transform.position).normalized);
         yield return new WaitForSeconds(attackCoolDuration);
         isAttack = true;
     }
@@ -99,7 +96,7 @@ public class RangedEnemyController : MonoBehaviour
 
     public void SetAnimation()
     {
-        animator.SetBool("isRun", MovementInput.magnitude > 0);
+        animator.SetBool("isWalk", MovementInput.magnitude > 0);
         animator.SetBool("isDead", isDead);
     }
 }
