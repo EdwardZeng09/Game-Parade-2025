@@ -76,10 +76,12 @@ public class RangedEnemyController : MonoBehaviour
         }
     }
 
+
     IEnumerator AttackCoroutine(Quaternion rotation)
     {
 
         animator.SetTrigger("isAttack");//或者bool类型触发动画
+        yield return new WaitForSeconds(0.5f);
         Instantiate(projectile, shotPoint.position, rotation);
         yield return new WaitForSeconds(attackCoolDuration);
         isAttack = true;
