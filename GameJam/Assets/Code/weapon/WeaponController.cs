@@ -22,6 +22,8 @@ public class WeaponController : MonoBehaviour
 
     public PlayerCharacter player;
     public WeaponRotator weaponRotator;
+    public WeaponSpriteController weaponSpriteController;
+    public OverheatBarSwitcher overheatBar;
     void Update()
     {
         fireCooldown -= Time.deltaTime;
@@ -63,6 +65,7 @@ public class WeaponController : MonoBehaviour
                     isOverheated = false;
                     player.ExitOverheatMovement();
                     weaponRotator.ExitOverheat();
+                    overheatBar.SetOverheatState(false);
                 }
             }
         }
@@ -78,6 +81,7 @@ public class WeaponController : MonoBehaviour
         {
             isOverheated = true;
             player.EnterOverheatMovement();
+            overheatBar.SetOverheatState(true);
         }
         else
         {
@@ -96,5 +100,7 @@ public class WeaponController : MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         bullet.GetComponent<Bullet>().SetDirection(dir);
+        bullet.GetComponent<Bullet>().SetShooter(gameObject);
+        weaponSpriteController.FlashOnFire();
     }
 }

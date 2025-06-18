@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     public float damage = 10f;
     public float lifeTime = 2f;
     private Vector2 direction;
+    private GameObject shooter;
 
     public void SetDirection(Vector2 dir)
     {
@@ -23,8 +24,14 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void SetShooter(GameObject shooterObj)
+    {
+        shooter = shooterObj;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.gameObject == shooter) return;
         IDamageable target = other.GetComponent<IDamageable>();
         if (target != null)
         {
