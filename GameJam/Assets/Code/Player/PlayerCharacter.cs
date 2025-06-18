@@ -22,9 +22,10 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     private float rollTimer = 0f;
     private Vector2 rollDirection;
 
-    private Vector3 lastDirection = Vector3.right; // 初始面向右
-    private const float minRotationThreshold = 1f; // 角度阈值（单位：角度）
+    private Vector3 lastDirection = Vector3.right; 
+    private const float minRotationThreshold = 1f;
 
+    private bool isOverheated = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,23 +36,31 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        if (!isRolling)
+
+        if(!isOverheated)
         {
-            moveInput.x = Input.GetAxisRaw("Horizontal");
-            moveInput.y = Input.GetAxisRaw("Vertical");
-            moveInput.Normalize();
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
-        {
-            StartRoll();
-        }
-        if (isRolling)
-        {
-            rollTimer -= Time.deltaTime;
-            if (rollTimer <= 0f)
+            if (!isRolling)
             {
-                EndRoll();
+                moveInput.x = Input.GetAxisRaw("Horizontal");
+                moveInput.y = Input.GetAxisRaw("Vertical");
+                moveInput.Normalize();
             }
+            if (Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
+            {
+                StartRoll();
+            }
+            if (isRolling)
+            {
+                rollTimer -= Time.deltaTime;
+                if (rollTimer <= 0f)
+                {
+                    EndRoll();
+                }
+            }
+        }
+        else
+        {
+            moveInput = Random.insideUnitCircle.normalized;
         }
     }
 
@@ -67,6 +76,16 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         }
     }
 
+    public void EnterOverheatMovement()
+    {
+        isOverheated = true;
+    }
+
+    public void ExitOverheatMovement()
+    {
+        isOverheated = false;
+        moveInput = Vector2.zero; 
+    }
     private void StartRoll()
     {
         isRolling = true;
@@ -106,5 +125,10 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         {
             currentHealth = maxHealth;
         }
+    }
+
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
     }
 }
