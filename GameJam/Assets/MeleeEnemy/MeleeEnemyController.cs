@@ -77,7 +77,7 @@ public class MeleeEnemyController : MonoBehaviour
 
     public void SetAnimation()
     {
-        animator.SetBool("isRun", MovementInput.magnitude > 0);
+        //animator.SetBool("isWalk", MovementInput.magnitude > 0);
         animator.SetBool("isDead", isDead);
     }
     private void OnTriggerEnter2D(Collider2D other)

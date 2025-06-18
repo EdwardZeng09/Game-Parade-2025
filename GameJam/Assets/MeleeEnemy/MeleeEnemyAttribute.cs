@@ -41,8 +41,13 @@ public class MeleeEnemyAttribute : Character
     {
         if (collision.CompareTag("Player"))
         {
-            collision.GetComponent<Character>().TakeDamage(damage);
-            //调用玩家受击函数
+            Character player = collision.GetComponent<Character>();
+            if (player != null) 
+            {
+                player.TakeDamage(damage);
+            }
+            //collision.GetComponent<Character>().TakeDamage(damage);
+            ////调用玩家受击函数
         }
     }
 
