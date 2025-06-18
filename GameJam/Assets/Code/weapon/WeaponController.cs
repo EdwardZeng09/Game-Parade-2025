@@ -17,15 +17,30 @@ public class WeaponController : MonoBehaviour
     public float coolInterval = 2f;
     public float coolAmountPerTick = 5f; 
     private float coolTimer = 0f;
+
+    public float overheatFireRate = 0.2f;
+
+    public PlayerCharacter player;
+    public WeaponRotator weaponRotator;
     void Update()
     {
         fireCooldown -= Time.deltaTime;
         HandleCooling();
-        if (Input.GetMouseButton(0) && fireCooldown <= 0f)
+        if (isOverheated)
         {
-            Shoot();
-            fireCooldown = fireRate;
+            if (fireCooldown <= 0f)
+            {
+                ShootRandom();
+                fireCooldown = overheatFireRate;
+            }
         }
+        else {
+           if (Input.GetMouseButton(0) && fireCooldown <= 0f)
+           {
+                Shoot();
+                fireCooldown = fireRate;
+           }
+        } 
         Debug.Log($"µ±Ç°ÎÂ¶È: {currentHeat}");
     }
 
@@ -46,6 +61,8 @@ public class WeaponController : MonoBehaviour
                 if (isOverheated && currentHeat <= 0)
                 {
                     isOverheated = false;
+                    player.ExitOverheatMovement();
+                    weaponRotator.ExitOverheat();
                 }
             }
         }
@@ -54,19 +71,30 @@ public class WeaponController : MonoBehaviour
     {
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 fireDirection = (mouseWorldPos - firePoint.position).normalized;
-
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        bullet.GetComponent<Bullet>().SetDirection(fireDirection);
+        FireBullet(fireDirection);
 
 
         if (currentHeat == maxHeat)
         {
             isOverheated = true;
+            player.EnterOverheatMovement();
         }
         else
         {
             currentHeat += heatPerShot;
         }
     }
+    void ShootRandom()
+    {
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        weaponRotator.EnterOverheat(randomDirection);
+        FireBullet(randomDirection);
 
+    }
+
+    void FireBullet(Vector2 dir)
+    {
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        bullet.GetComponent<Bullet>().SetDirection(dir);
+    }
 }
