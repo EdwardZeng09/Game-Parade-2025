@@ -100,6 +100,6 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 8
-  pickupRadius: 2
-  moveSpeed: 5
+  pickupRadius: 1
+  moveSpeed: 10
   pickupDistance: 0.2
