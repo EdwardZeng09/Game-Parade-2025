@@ -21,6 +21,7 @@ public class WeaponController : MonoBehaviour
     public float overheatFireRate = 0.2f;
 
     public PlayerCharacter player;
+    public WeaponRotator weaponRotator;
     void Update()
     {
         fireCooldown -= Time.deltaTime;
@@ -61,6 +62,7 @@ public class WeaponController : MonoBehaviour
                 {
                     isOverheated = false;
                     player.ExitOverheatMovement();
+                    weaponRotator.ExitOverheat();
                 }
             }
         }
@@ -85,6 +87,7 @@ public class WeaponController : MonoBehaviour
     void ShootRandom()
     {
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        weaponRotator.EnterOverheat(randomDirection);
         FireBullet(randomDirection);
 
     }
