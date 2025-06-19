@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSpeed: 2
-  damage: 10
+  damage: 1
   Player: {fileID: 0}
   knockbackForce: 5
   canMove: 1
