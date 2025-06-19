@@ -43,7 +43,6 @@ public class WeaponController : MonoBehaviour
                 fireCooldown = fireRate;
            }
         } 
-        Debug.Log($"µ±Ç°ÎÂ¶È: {currentHeat}");
     }
 
     private void HandleCooling()

@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSpeed: 3
-  damage: 50
+  damage: 1
   explosionRadius: 2
   chaseRadius: 1
   damageLayer:
@@ -191,6 +191,8 @@ MonoBehaviour:
   delay: 1
   isPlayerInside: 0
   canMove: 1
+  Player: {fileID: 0}
+  knockbackForce: 5
 --- !u!95 &3178110335530149963
 Animator:
   serializedVersion: 5

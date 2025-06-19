@@ -194,7 +194,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentSpeed: 2
-  damage: 10
+  damage: 1
+  Player: {fileID: 0}
+  knockbackForce: 5
+  canMove: 1
 --- !u!70 &-3706834499195295830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCharacter : MonoBehaviour, IDamageable
 {
+    [Header("ÑªÁ¿UI")]
+    public List<Image> healthImages;
+    public Sprite heartFull;
+    public Sprite heartEmpty;
+
     [Header("»ù´¡ÊôÐÔ")]
-    public float maxHealth = 100f;
+    public float maxHealth = 5f;
     public float moveSpeed = 5f;
 
     private float currentHealth;
@@ -31,36 +37,32 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+        UpdateHealthUI();
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if(!isOverheated)
+        Debug.Log(currentHealth);
+        UpdateHealthUI();
+        if (!isRolling)
         {
-            if (!isRolling)
-            {
-                moveInput.x = Input.GetAxisRaw("Horizontal");
-                moveInput.y = Input.GetAxisRaw("Vertical");
-                moveInput.Normalize();
-            }
-            if (Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
-            {
-                StartRoll();
-            }
-            if (isRolling)
-            {
-                rollTimer -= Time.deltaTime;
-                if (rollTimer <= 0f)
-                {
-                    EndRoll();
-                }
-            }
+            moveInput.x = Input.GetAxisRaw("Horizontal");
+            moveInput.y = Input.GetAxisRaw("Vertical");
+            moveInput.Normalize();
         }
-        else
+        if (!isOverheated && Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
         {
-            moveInput = Random.insideUnitCircle.normalized;
+            StartRoll();
+        }
+
+        if (isRolling)
+        {
+            rollTimer -= Time.deltaTime;
+            if (rollTimer <= 0f)
+            {
+                EndRoll();
+            }
         }
     }
 
@@ -115,6 +117,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         {
             currentHealth = 0;
         }
+        UpdateHealthUI();
     }
 
     public void Heal(float amount)
@@ -125,10 +128,35 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         {
             currentHealth = maxHealth;
         }
+        UpdateHealthUI();
     }
 
     public float GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    private void UpdateHealthUI()
+    {
+        for (int i = 0; i < healthImages.Count; i++)
+        {
+            if (i < maxHealth)
+            {
+                healthImages[i].enabled = true;
+                healthImages[i].sprite = i < currentHealth ? heartFull : heartEmpty;
+            }
+            else
+            {
+                healthImages[i].enabled = false;
+            }
+        }
+    }
+
+    public void IncreaseMaxHealth(float amount)
+    {
+        maxHealth += amount;
+        if (maxHealth > healthImages.Count) maxHealth = healthImages.Count; 
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        UpdateHealthUI();
     }
 }
