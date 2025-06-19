@@ -18,17 +18,30 @@ public class MeleeEnemyController : MonoBehaviour
     [SerializeField] public float damage = 10f;
 
     private bool isDead;
+    [SerializeField] public Transform Player;
+
+    [SerializeField] public float knockbackForce = 5f;
+   
+    public bool canMove=true;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        if (Player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        if (!isDead)
-            Move();
+        if (!isDead&&canMove)
+        Move();
         SetAnimation();
     }
     public void Move()
@@ -67,6 +80,7 @@ public class MeleeEnemyController : MonoBehaviour
     //}
     public void EnemyHurt()
     {
+        Knockback(Player.position);
         animator.SetTrigger("isHurt");
     }
     public void Dead()
@@ -90,5 +104,20 @@ public class MeleeEnemyController : MonoBehaviour
             target.TakeDamage(damage);
            
         }
+    }
+
+
+    public void Knockback(Vector2 attackerPosition) 
+    {   
+    Vector2 direction=((Vector2)transform.position-attackerPosition).normalized;
+    rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+        StartCoroutine(StopMove());
+    }
+
+
+    IEnumerator StopMove() 
+    {canMove = false;
+        yield return new WaitForSeconds(0.2f);
+    canMove = true; 
     }
 }

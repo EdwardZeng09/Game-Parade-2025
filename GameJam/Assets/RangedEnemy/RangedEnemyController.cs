@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RangedEnemyController : MonoBehaviour
@@ -17,6 +18,10 @@ public class RangedEnemyController : MonoBehaviour
     [SerializeField] private float attackCoolDuration = 1;
 
     private bool isDead;
+
+    [SerializeField] public float knockbackForce = 5f;
+
+    public bool canMove = true;
 
     public GameObject projectile;//µ¯Ä»×é¼þ
     public Transform shotPoint;
@@ -41,7 +46,7 @@ public class RangedEnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isDead)
+        if (!isDead&&canMove)
             Move();
         SetAnimation();
     }
@@ -94,6 +99,7 @@ public class RangedEnemyController : MonoBehaviour
     }
     public void EnemyHurt()
     {
+        Knockback(Player.position);
         animator.SetTrigger("isHurt");
     }
     public void Dead()
@@ -107,5 +113,19 @@ public class RangedEnemyController : MonoBehaviour
     {
         animator.SetBool("isWalk", MovementInput.magnitude > 0);
         //animator.SetBool("isDead", isDead);
+    }
+    public void Knockback(Vector2 attackerPosition)
+    {
+        Vector2 direction = ((Vector2)transform.position - attackerPosition).normalized;
+        rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+        StartCoroutine(StopMove());
+    }
+
+
+    IEnumerator StopMove()
+    {
+        canMove = false;
+        yield return new WaitForSeconds(0.2f);
+        canMove = true;
     }
 }

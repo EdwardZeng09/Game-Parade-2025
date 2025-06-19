@@ -25,12 +25,25 @@ public class BoomerController : MonoBehaviour
     public Coroutine explosionCoroutine;
     public bool isPlayerInside = false;
     public bool canMove=true;
-   
+
+    [SerializeField] public Transform Player;
+
+    [SerializeField] public float knockbackForce = 5f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        if (Player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -108,6 +121,7 @@ public class BoomerController : MonoBehaviour
     
     public void EnemyHurt()
     {
+        Knockback(Player.position);
         animator.SetTrigger("isHurt");
     }
     public void Dead()
@@ -137,5 +151,21 @@ public class BoomerController : MonoBehaviour
     //animator.SetTrigger("waitForBoom");
     yield return new WaitForSeconds(delay);
         animator.SetTrigger("isBoom");
+    }
+
+
+    public void Knockback(Vector2 attackerPosition)
+    {
+        Vector2 direction = ((Vector2)transform.position - attackerPosition).normalized;
+        rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
+        StartCoroutine(StopMove());
+    }
+
+
+    IEnumerator StopMove()
+    {
+        canMove = false;
+        yield return new WaitForSeconds(0.2f);
+        canMove = true;
     }
 }
