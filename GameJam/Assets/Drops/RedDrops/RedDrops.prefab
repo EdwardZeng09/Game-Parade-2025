@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 128
   pickupRadius: 1
   moveSpeed: 20
   pickupDistance: 0.2

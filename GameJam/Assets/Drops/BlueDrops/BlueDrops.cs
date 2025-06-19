@@ -36,6 +36,7 @@ public class BlueDrops : MonoBehaviour
     private void OnPickup(GameObject player)
     {
         //Drops功能
+        return;
       
     }
     //可视化
