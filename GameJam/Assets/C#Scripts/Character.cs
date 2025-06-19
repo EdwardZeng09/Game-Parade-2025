@@ -16,6 +16,24 @@ public class Character : MonoBehaviour,IDamageable
     public UnityEvent OnHurt;
     public UnityEvent OnDeath;
 
+
+    [SerializeField] public GameObject damageTextPrefab;
+    [SerializeField] public string canvasName = "PlayerUI";
+    public Canvas worldCanvas;
+
+    protected virtual void Awake()
+    {
+        GameObject foundCanvasObj = GameObject.Find(canvasName);
+        if (foundCanvasObj != null) 
+        {
+        worldCanvas = foundCanvasObj.GetComponent<Canvas>();
+            Debug.Log("1");
+        }
+            
+        else
+            Debug.LogError("未找到名为 " + canvasName + " 的画布！");
+    }
+
     //public bool isDead=false;
     public bool IsDead => currentHealth <= 0;
     protected virtual void OnEnable()//virtual这里表示子类可以对该方法进行重写 
@@ -30,8 +48,11 @@ public class Character : MonoBehaviour,IDamageable
         if (currentHealth - amount > 0f)
         {
             currentHealth -= amount;
+            Debug.Log("2");
+            ShowDamageText(amount);
+            
             StartCoroutine(nameof(InvulnerableCoroutine));//启动无敌时间协程
-            //执行角色受伤动画
+           
             OnHurt?.Invoke();//判断OnHurt事件是否为空，若不为空则执行
 
         }
@@ -62,5 +83,32 @@ public class Character : MonoBehaviour,IDamageable
         //等待无敌时间
         yield return new WaitForSeconds(invulnerableDuration);
         invulnerable = false;
+    }
+
+
+    public void ShowDamageText(float damage)
+    {
+        try
+        {
+            Vector3 spawnPos = transform.position + new Vector3(0, 1f, 0);
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(spawnPos);
+
+            GameObject obj = Instantiate(damageTextPrefab, worldCanvas.transform); // 不要带位置
+            obj.transform.position = screenPos; // 使用屏幕坐标设置位置
+
+            var dt = obj.GetComponent<DamageText>();
+            if (dt == null)
+            {
+                Debug.LogError(" DamageText 脚本没挂在预制体上！");
+                return;
+            }
+
+            dt.SetText(damage.ToString("F0"));
+            Debug.Log(" 成功调用 SetText");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("ShowDamageText 执行出错：" + ex.Message);
+        }
     }
 }

@@ -135,6 +135,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageTextPrefab: {fileID: 8588530470738052409, guid: 248033e834481c84ca8676fbd1ed0845, type: 3}
+  canvasName: PlayerUI
+  worldCanvas: {fileID: 0}
   OnMovementInput:
     m_PersistentCalls:
       m_Calls:
@@ -191,6 +194,8 @@ MonoBehaviour:
   delay: 1
   isPlayerInside: 0
   canMove: 1
+  Player: {fileID: 0}
+  knockbackForce: 5
 --- !u!95 &3178110335530149963
 Animator:
   serializedVersion: 5

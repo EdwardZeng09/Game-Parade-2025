@@ -162,6 +162,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageTextPrefab: {fileID: 8588530470738052409, guid: 248033e834481c84ca8676fbd1ed0845, type: 3}
+  canvasName: PlayerUI
+  worldCanvas: {fileID: 0}
   OnMovementInput:
     m_PersistentCalls:
       m_Calls:
@@ -195,6 +198,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSpeed: 2
   damage: 10
+  Player: {fileID: 0}
+  knockbackForce: 5
+  canMove: 1
+  damageTextPrefab: {fileID: 0}
+  worldCanves: {fileID: 0}
 --- !u!70 &-3706834499195295830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
