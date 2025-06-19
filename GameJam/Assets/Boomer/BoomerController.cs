@@ -128,6 +128,7 @@ public class BoomerController : MonoBehaviour
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
+        FindObjectOfType<EnemySpawner>().OnEnemyKilled();
         Destroy(this.gameObject);
     }
    

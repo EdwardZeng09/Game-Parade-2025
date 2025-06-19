@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
+using TMPro;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class EnemySpawner : MonoBehaviour
     public List<Enemies> enemies;
     [Range(0, 1f)]
     public float spawnChange = 1f;
+    
     private List<Vector3> TileWorldPos = new List<Vector3>();
     private int TileCount;
     private int EnemyCount;
@@ -18,8 +21,23 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] public float spawnDelay = 1f;
     [SerializeField] public float spawnTimer = 0f;
-
+    [SerializeField] public int enemiesPerWave = 5;
     [SerializeField] public int Num;
+
+    [Header("波次设定")]
+    public int maxWave = 3;
+    private int currentWave = 0;
+    private bool isSpawning = false;
+    private int aliveEnemies = 0;
+    private bool isWaveFinished = false;
+
+    [Header("UI")]
+    public TextMeshProUGUI waveText;
+    public GameObject upgradePanel;
+    private bool waitingForUpgrade = false;
+    private bool hasSelectedBuff = false;
+    private bool hasSelectedDebuff = false;
+
     void Start()
     {
         tilemap = GetComponent<Tilemap>();
@@ -42,30 +60,69 @@ public class EnemySpawner : MonoBehaviour
 
         TileCount = TileWorldPos.Count;
         EnemyCount = enemies.Count;
+        StartNextWave();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //每隔一段时间
-        spawnTimer -= Time.deltaTime;
-        if (spawnTimer < 0f)
-        {
-            int i = 1;
-            for (; i <= Num; i++)
-            {
-                //随机选择一个地点
-                int aRandomTile = Random.Range(0, TileCount);
-                Vector3 spawnPos = TileWorldPos[aRandomTile];
-                //刷新敌人
-                SpawnEnemy(spawnPos);
-            }
-
-            spawnTimer = spawnDelay;
-        }
-
     }
 
+    void StartNextWave()
+    {
+        currentWave++;
+        if (currentWave > maxWave) return;
+
+        waveText.text = $"Wave {currentWave} / {maxWave}";
+        StartCoroutine(SpawnWave());
+    }
+
+    IEnumerator SpawnWave()
+    {
+        isSpawning = true;
+        isWaveFinished = false; // 重置波次完成标志
+
+        for (int i = 0; i < enemiesPerWave; i++)
+        {
+            int randomTile = Random.Range(0, TileWorldPos.Count);
+            Vector3 spawnPos = TileWorldPos[randomTile];
+            SpawnEnemy(spawnPos); 
+            yield return new WaitForSeconds(spawnDelay);
+        }
+
+        isSpawning = false;
+        isWaveFinished = true; 
+    }
+
+    void ShowUpgradePanel()
+    {
+        upgradePanel.SetActive(true);
+        waitingForUpgrade = true;
+        hasSelectedBuff = false;
+        hasSelectedDebuff = false;
+    }
+
+    public void OnBuffSelected()
+    {
+        hasSelectedBuff = true;
+        TryContinueWave();
+    }
+
+    public void OnDebuffSelected()
+    {
+        hasSelectedDebuff = true;
+        TryContinueWave();
+    }
+
+    private void TryContinueWave()
+    {
+        if (hasSelectedBuff && hasSelectedDebuff)
+        {
+            upgradePanel.SetActive(false);
+            waitingForUpgrade = false;
+            StartNextWave();
+        }
+    }
 
     //加权刷新敌人方法
     public void SpawnEnemy(Vector3 spawnPos)
@@ -87,6 +144,7 @@ public class EnemySpawner : MonoBehaviour
             if (rand < current)
             {
                 Instantiate(enemy.prefab, spawnPos, Quaternion.identity);
+                aliveEnemies++;
                 break;
             }
         }
@@ -97,5 +155,15 @@ public class EnemySpawner : MonoBehaviour
         public GameObject prefab;
         [Range(0, 100)]
         public int weight;
+    }
+
+    public void OnEnemyKilled()
+    {
+        aliveEnemies--;
+
+        if (aliveEnemies <= 0 && isWaveFinished && currentWave < maxWave)
+        {
+            ShowUpgradePanel();
+        }
     }
 }

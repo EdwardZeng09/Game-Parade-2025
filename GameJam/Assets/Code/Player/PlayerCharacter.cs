@@ -43,7 +43,6 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentHealth);
         UpdateHealthUI();
         if (!isRolling)
         {

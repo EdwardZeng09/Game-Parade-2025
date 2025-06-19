@@ -106,6 +106,7 @@ public class RangedEnemyController : MonoBehaviour
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
+        FindObjectOfType<EnemySpawner>().OnEnemyKilled();
         Destroy(gameObject);
     }
 

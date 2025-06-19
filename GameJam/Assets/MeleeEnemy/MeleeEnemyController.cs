@@ -94,6 +94,7 @@ public class MeleeEnemyController : MonoBehaviour
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
+        FindObjectOfType<EnemySpawner>().OnEnemyKilled();
         Destroy(gameObject);
     }
 
