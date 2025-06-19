@@ -21,6 +21,8 @@ public class Timer : MonoBehaviour
             //清除所有怪物
            ClearAllEnemies();
         //跳转到升级页面
+
+
         remainingTime = timeDelay;
         }
         timerText.text = "Time Left: "+Mathf.CeilToInt(remainingTime)+"s";

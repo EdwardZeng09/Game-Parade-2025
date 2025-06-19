@@ -16,8 +16,9 @@ public class MeleeEnemyAttribute : Character
     [SerializeField] private float separationForceScale = 1f;
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (Player == null)
         {
             GameObject playerObj = GameObject.FindWithTag("Player");

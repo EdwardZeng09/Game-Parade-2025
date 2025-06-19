@@ -21,9 +21,9 @@ public class RangedEnemyAttribute :Character
 
     //public GameObject projectile;//µ¯Ä»×é¼þ
     //public Transform shotPoint;
-
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (Player == null)
         {
             GameObject playerObj = GameObject.FindWithTag("Player");

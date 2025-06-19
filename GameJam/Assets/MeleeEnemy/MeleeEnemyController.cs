@@ -23,6 +23,13 @@ public class MeleeEnemyController : MonoBehaviour
     [SerializeField] public float knockbackForce = 5f;
    
     public bool canMove=true;
+
+    [SerializeField] private GameObject damageTextPrefab;
+    [SerializeField] private Canvas worldCanves;
+
+
+    
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -119,5 +126,13 @@ public class MeleeEnemyController : MonoBehaviour
     {canMove = false;
         yield return new WaitForSeconds(0.2f);
     canMove = true; 
+    }
+
+
+    public void ShowDamageText(float damage) 
+    {
+    Vector3 spawnPos= transform.position+new Vector3(0,1f,0);
+    GameObject obj = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity, worldCanves.transform);
+        obj.GetComponent<DamageText>().SetText(damage.ToString("F0"));
     }
 }
