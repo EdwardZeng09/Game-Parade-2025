@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af34e05fb94abd46a8fdf472f8bb18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 7
+  currentSpeed: 3
   damage: 50
   explosionRadius: 2
   chaseRadius: 1

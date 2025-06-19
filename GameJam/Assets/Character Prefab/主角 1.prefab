@@ -262,6 +262,8 @@ MonoBehaviour:
   overheatFireRate: 0.2
   player: {fileID: 2289680737619052169}
   weaponRotator: {fileID: 911956004673684554}
+  weaponSpriteController: {fileID: 0}
+  overheatBar: {fileID: 0}
 --- !u!1 &6985946205447407862
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  moveSpeed: 10
+  moveSpeed: 5
   rollSpeed: 20
   rollDuration: 0.3
   rollCooldown: 1

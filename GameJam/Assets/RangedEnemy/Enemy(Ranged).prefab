@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa7ade656d742548a4ba36e464584f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 5
+  currentSpeed: 2
   isAttack: 1
   attackCoolDuration: 1
   projectile: {fileID: 3642468032941413047, guid: 0cd9792fd765bc742ab91a2176608531, type: 3}
