@@ -167,6 +167,8 @@ MonoBehaviour:
         m_CallState: 2
   Player: {fileID: 0}
   attackDistance: 0.8
+  separationRadius: 1
+  separationForceScale: 1
 --- !u!114 &2802740806605674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +187,7 @@ MonoBehaviour:
   chaseRadius: 1
   damageLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 128
   delay: 1
   isPlayerInside: 0
   canMove: 1

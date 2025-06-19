@@ -94,11 +94,12 @@ public class RangedEnemyController : MonoBehaviour
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
+        Destroy(gameObject);
     }
 
     public void SetAnimation()
     {
         animator.SetBool("isWalk", MovementInput.magnitude > 0);
-        animator.SetBool("isDead", isDead);
+        //animator.SetBool("isDead", isDead);
     }
 }
