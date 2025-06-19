@@ -39,9 +39,9 @@ public class MeleeEnemyController : MonoBehaviour
             rb.velocity = MovementInput * currentSpeed;
 
             //µÐÈË³¯Ïò·­×ª
-            if (MovementInput.x > 0)
-                sr.flipX = true;
             if (MovementInput.x < 0)
+                sr.flipX = true;
+            if (MovementInput.x > 0)
                 sr.flipX = false;
         }
         else
@@ -73,12 +73,13 @@ public class MeleeEnemyController : MonoBehaviour
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
+        Destroy(gameObject);
     }
 
     public void SetAnimation()
     {
         //animator.SetBool("isWalk", MovementInput.magnitude > 0);
-        animator.SetBool("isDead", isDead);
+        //animator.SetBool("isDead", isDead);
     }
     private void OnTriggerEnter2D(Collider2D other)
     {

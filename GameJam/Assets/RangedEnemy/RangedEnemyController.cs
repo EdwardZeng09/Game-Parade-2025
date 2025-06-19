@@ -70,6 +70,12 @@ public class RangedEnemyController : MonoBehaviour
         { 
             isAttack = false;
             Vector2 direction = (Player.position - transform.position).normalized;
+
+            if (direction.x < 0)
+                sr.flipX=true;
+            if (direction.x > 0)
+                sr.flipX = false;
+
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion rotation = Quaternion.Euler(0, 0, angle);
             StartCoroutine(AttackCoroutine(rotation));
