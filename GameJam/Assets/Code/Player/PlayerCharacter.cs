@@ -32,6 +32,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     private const float minRotationThreshold = 1f;
 
     private bool isOverheated = false;
+
     // Start is called before the first frame update
     void Start()
     {

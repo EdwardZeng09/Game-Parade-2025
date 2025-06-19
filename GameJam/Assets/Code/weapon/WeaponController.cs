@@ -6,7 +6,7 @@ public class WeaponController : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireRate = 0.3f;
+    public float baseFireRate = 1f;
     private float fireCooldown = 0f;
 
     [Header("Œ¬øÿ…Ë÷√")]
@@ -24,6 +24,14 @@ public class WeaponController : MonoBehaviour
     public WeaponRotator weaponRotator;
     public WeaponSpriteController weaponSpriteController;
     public OverheatBarSwitcher overheatBar;
+
+    [Header("buff…Ë÷√")]
+    public float shootSpeedMultiplier = 1f;
+
+    void Start()
+    {
+        player = FindObjectOfType<PlayerCharacter>();
+    }
     void Update()
     {
         fireCooldown -= Time.deltaTime;
@@ -40,8 +48,9 @@ public class WeaponController : MonoBehaviour
            if (Input.GetMouseButton(0) && fireCooldown <= 0f)
            {
                 Shoot();
-                fireCooldown = fireRate;
-           }
+                float fireRate = baseFireRate * BuffManager.Instance.GetBuffMultiplier("RapidFire");
+                fireCooldown = 1f / fireRate;
+            }
         } 
     }
 
