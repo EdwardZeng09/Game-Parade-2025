@@ -40,7 +40,6 @@ public class RedDrops : MonoBehaviour
         if (healTarget!=null) 
         {
             healTarget.Heal(HP);
-            Debug.Log("玩家加血成功");
         }
     }
     //可视化

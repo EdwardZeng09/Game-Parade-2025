@@ -14,7 +14,11 @@ public class BuffManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
+
+        InitBuffList();
+        InitDebuffList();
     }
 
     void InitBuffList()
@@ -23,37 +27,37 @@ public class BuffManager : MonoBehaviour
     {
         new BuffData {
             id = "RapidFire",
-            displayName = "速射导轨",
+            displayName = "RapidFire",
             description = "弹道射速加快（10%/20%/30%）",
             level = 0
         },
         new BuffData {
             id = "ExplosiveAmmo",
-            displayName = "爆裂子弹",
+            displayName = "ExplosiveAmmo",
             description = "子弹命中有范围伤害（小/中/大 半径）",
             level = 0
         },
         new BuffData {
             id = "MultiShot",
-            displayName = "散射",
+            displayName = "MultiShot",
             description = "每次射击额外发出子弹（每发伤害为10%）",
             level = 0
         },
         new BuffData {
             id = "HeatCapacity",
-            displayName = "临时存储",
+            displayName = "HeatCapacity",
             description = "温度条变长（15%/30%/50%）",
             level = 0
         },
         new BuffData {
             id = "Overclock",
-            displayName = "聚能",
+            displayName = "Overclock",
             description = "单发子弹伤害增加（10%/20%/30%）",
             level = 0
         },
         new BuffData {
             id = "Overdrive",
-            displayName = "超频",
+            displayName = "Overdrive",
             description = "武器散热更快（20%/40%/60%）",
             level = 0
         }
@@ -66,54 +70,105 @@ public class BuffManager : MonoBehaviour
     {
         new DebuffData {
             id = "Weakened",
-            displayName = "虚弱",
+            displayName = "Weakened",
             description = "移动速度变慢（10%/20%/30%）",
             level = 0
         },
         new DebuffData {
             id = "Sacrifice",
-            displayName = "牺牲",
+            displayName = "Sacrifice",
             description = "血量上限降低（5%/10%/15%）",
             level = 0
         },
         new DebuffData {
             id = "Fragile",
-            displayName = "易伤",
+            displayName = "Fragile",
             description = "受到伤害提高（10%/20%/30%）",
             level = 0
         },
         new DebuffData {
             id = "Wither",
-            displayName = "枯萎",
+            displayName = "Wither",
             description = "回血效果减少（10%/20%/30%）",
             level = 0
         },
         new DebuffData {
             id = "Blindness",
-            displayName = "致盲",
+            displayName = "Blindness",
             description = "视野减少（小/中/大）",
             level = 0
         },
         new DebuffData {
             id = "Berserk",
-            displayName = "癫狂",
+            displayName = "Berserk",
             description = "失控时间变长（1s/2s/3s）",
             level = 0
         }
     };
     }
 
-    public float GetBuffMultiplier(string id)
+    public void ApplyBuff(string id)
     {
-        var buff = activeBuffs.Find(b => b.id == id);
-        if (buff == null) return 1f;
+        // 在 allBuffs 中查找基础数据
+        var baseBuff = allBuffs.Find(b => b.id == id);
+        if (baseBuff == null) return;
 
-        switch (id)
+        // 查看是否已生效
+        var existing = activeBuffs.Find(b => b.id == id);
+        if (existing != null)
         {
-            case "RapidFire":
-                return 1f + 0.1f * buff.level;
-            default:
-                return 1f;
+            // 已存在则升级，最多升级到 3 级
+            existing.level = Mathf.Min(existing.level + 1, 3);
+        }
+        else
+        {
+            // 新增一个 1 级 Buff
+            activeBuffs.Add(new BuffData
+            {
+                id = baseBuff.id,
+                displayName = baseBuff.displayName,
+                description = baseBuff.description,
+                level = 1
+            });
+        }
+        if (id == "RapidFire")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null)
+                wc.ApplyRapidFireBuff(activeBuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "MultiShot")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null)
+                wc.ApplyMultiShotBuff(activeBuffs.Find(b => b.id == id).level);
+        }
+
+    }
+
+    public void ApplyDebuff(string id)
+    {
+        // 在 allDebuffs 中查找基础数据
+        var baseDebuff = allDebuffs.Find(d => d.id == id);
+        if (baseDebuff == null) return;
+
+        // 查看是否已生效
+        var existing = activeDebuffs.Find(d => d.id == id);
+        if (existing != null)
+        {
+            // 已存在则升级，最多升级到 3 级
+            existing.level = Mathf.Min(existing.level + 1, 3);
+        }
+        else
+        {
+            // 新增一个 1 级 Debuff
+            activeDebuffs.Add(new DebuffData
+            {
+                id = baseDebuff.id,
+                displayName = baseDebuff.displayName,
+                description = baseDebuff.description,
+                level = 1
+            });
         }
     }
 }

@@ -35,8 +35,6 @@ public class EnemySpawner : MonoBehaviour
     public TextMeshProUGUI waveText;
     public GameObject upgradePanel;
     private bool waitingForUpgrade = false;
-    private bool hasSelectedBuff = false;
-    private bool hasSelectedDebuff = false;
 
     void Start()
     {
@@ -94,36 +92,6 @@ public class EnemySpawner : MonoBehaviour
         isWaveFinished = true; 
     }
 
-    void ShowUpgradePanel()
-    {
-        upgradePanel.SetActive(true);
-        waitingForUpgrade = true;
-        hasSelectedBuff = false;
-        hasSelectedDebuff = false;
-    }
-
-    public void OnBuffSelected()
-    {
-        hasSelectedBuff = true;
-        TryContinueWave();
-    }
-
-    public void OnDebuffSelected()
-    {
-        hasSelectedDebuff = true;
-        TryContinueWave();
-    }
-
-    private void TryContinueWave()
-    {
-        if (hasSelectedBuff && hasSelectedDebuff)
-        {
-            upgradePanel.SetActive(false);
-            waitingForUpgrade = false;
-            StartNextWave();
-        }
-    }
-
     //加权刷新敌人方法
     public void SpawnEnemy(Vector3 spawnPos)
     {
@@ -163,7 +131,15 @@ public class EnemySpawner : MonoBehaviour
 
         if (aliveEnemies <= 0 && isWaveFinished && currentWave < maxWave)
         {
-            ShowUpgradePanel();
+            FindObjectOfType<UpgradeUI>().ShowUpgradePanel();
         }
+    }
+
+    public void OnUpgradeSelected()
+    {
+        // 隐藏面板、取消等待状态
+        waitingForUpgrade = false;
+        // 启动下一波
+        StartNextWave();
     }
 }

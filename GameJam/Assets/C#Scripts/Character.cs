@@ -27,7 +27,6 @@ public class Character : MonoBehaviour,IDamageable
         if (foundCanvasObj != null) 
         {
         worldCanvas = foundCanvasObj.GetComponent<Canvas>();
-            Debug.Log("1");
         }
             
         else
@@ -48,7 +47,6 @@ public class Character : MonoBehaviour,IDamageable
         if (currentHealth - amount > 0f)
         {
             currentHealth -= amount;
-            Debug.Log("2");
             ShowDamageText(amount);
             
             StartCoroutine(nameof(InvulnerableCoroutine));//启动无敌时间协程
@@ -104,7 +102,6 @@ public class Character : MonoBehaviour,IDamageable
             }
 
             dt.SetText(damage.ToString("F0"));
-            Debug.Log(" 成功调用 SetText");
         }
         catch (System.Exception ex)
         {

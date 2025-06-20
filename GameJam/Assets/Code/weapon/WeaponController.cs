@@ -25,9 +25,12 @@ public class WeaponController : MonoBehaviour
     public WeaponSpriteController weaponSpriteController;
     public OverheatBarSwitcher overheatBar;
 
-    [Header("buff设置")]
-    public float shootSpeedMultiplier = 1f;
+    [Header("RapidFire设置")]
+    private float rapidFireMultiplier = 1f;
 
+    [Header("MultiShot 散射设置")]
+    public float multiShotDamageFactor = 0f;   // Buff 等级 × 0.1f
+    public float multiShotSpreadAngle = 15f; // 每发子弹偏转角度
     void Start()
     {
         player = FindObjectOfType<PlayerCharacter>();
@@ -48,7 +51,7 @@ public class WeaponController : MonoBehaviour
            if (Input.GetMouseButton(0) && fireCooldown <= 0f)
            {
                 Shoot();
-                float fireRate = baseFireRate * BuffManager.Instance.GetBuffMultiplier("RapidFire");
+                float fireRate = baseFireRate * rapidFireMultiplier;
                 fireCooldown = 1f / fireRate;
             }
         } 
@@ -83,8 +86,30 @@ public class WeaponController : MonoBehaviour
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 fireDirection = (mouseWorldPos - firePoint.position).normalized;
         FireBullet(fireDirection);
+        if (multiShotDamageFactor > 0f)
+        {
+            // 左右各一发
+            float[] angles = { -multiShotSpreadAngle, multiShotSpreadAngle };
+            foreach (var a in angles)
+            {
+                // 计算偏转后的方向
+                Vector3 dir3 = new Vector3(fireDirection.x, fireDirection.y, 0);
+                Vector3 rotated = Quaternion.Euler(0, 0, a) * dir3;
+                Vector2 extraDir = new Vector2(rotated.x, rotated.y).normalized;
 
-
+                // Instantiate 额外子弹
+                GameObject eb = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+                var bComp = eb.GetComponent<Bullet>();
+                if (bComp != null)
+                {
+                    bComp.SetDirection(extraDir);
+                    bComp.SetShooter(gameObject);
+                    // 按比例缩减伤害
+                    bComp.damage *= multiShotDamageFactor;
+                }
+                weaponSpriteController.FlashOnFire();
+            }
+        }
         if (currentHeat == maxHeat)
         {
             isOverheated = true;
@@ -101,7 +126,30 @@ public class WeaponController : MonoBehaviour
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         weaponRotator.EnterOverheat(randomDirection);
         FireBullet(randomDirection);
+        if (multiShotDamageFactor > 0f)
+        {
+            // 左右各一发
+            float[] angles = { -multiShotSpreadAngle, multiShotSpreadAngle };
+            foreach (var a in angles)
+            {
+                // 计算偏转后的方向
+                Vector3 dir3 = new Vector3(randomDirection.x, randomDirection.y, 0);
+                Vector3 rotated = Quaternion.Euler(0, 0, a) * dir3;
+                Vector2 extraDir = new Vector2(rotated.x, rotated.y).normalized;
 
+                // Instantiate 额外子弹
+                GameObject eb = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+                var bComp = eb.GetComponent<Bullet>();
+                if (bComp != null)
+                {
+                    bComp.SetDirection(extraDir);
+                    bComp.SetShooter(gameObject);
+                    // 按比例缩减伤害
+                    bComp.damage *= multiShotDamageFactor;
+                }
+                weaponSpriteController.FlashOnFire();
+            }
+        }
     }
 
     void FireBullet(Vector2 dir)
@@ -110,5 +158,19 @@ public class WeaponController : MonoBehaviour
         bullet.GetComponent<Bullet>().SetDirection(dir);
         bullet.GetComponent<Bullet>().SetShooter(gameObject);
         weaponSpriteController.FlashOnFire();
+    }
+
+
+    public void ApplyRapidFireBuff(int level)
+    {
+        rapidFireMultiplier = 1f + 0.1f * level;
+        Debug.Log($"[Weapon] 已应用 “速射导轨” 等级 {level}，倍率 {rapidFireMultiplier:P0}");
+    }
+
+    public void ApplyMultiShotBuff(int level)
+    {
+        // 每次额外两发子弹，伤害按 10%/20%/30% 计算
+        multiShotDamageFactor = 0.1f * level;
+        Debug.Log($"[Weapon] 已应用 MultiShot 散射 等级 {level}，额外子弹伤害 {multiShotDamageFactor:P0}");
     }
 }
