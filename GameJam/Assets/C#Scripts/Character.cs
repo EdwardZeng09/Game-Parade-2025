@@ -7,8 +7,8 @@ using UnityEngine.Events;
 public class Character : MonoBehaviour,IDamageable
 {
     [Header("属性")]
-    [SerializeField] protected float maxHealth;
-    [SerializeField] protected float currentHealth;//protected意味着只有当前类和继承其的子类可以调用
+    [SerializeField] protected float maxHealth=100f;
+    [SerializeField] protected float currentHealth=100f;//protected意味着只有当前类和继承其的子类可以调用
 
     [Header("无敌")]
     public bool invulnerable;
@@ -21,6 +21,8 @@ public class Character : MonoBehaviour,IDamageable
     [SerializeField] public string canvasName = "PlayerUI";
     public Canvas worldCanvas;
 
+
+   
     protected virtual void Awake()
     {
         GameObject foundCanvasObj = GameObject.Find(canvasName);
@@ -83,6 +85,7 @@ public class Character : MonoBehaviour,IDamageable
         invulnerable = false;
     }
 
+  
 
     public void ShowDamageText(float damage)
     {

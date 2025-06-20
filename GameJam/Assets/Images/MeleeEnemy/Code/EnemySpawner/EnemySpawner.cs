@@ -8,6 +8,11 @@ using TMPro;
 
 public class EnemySpawner : MonoBehaviour
 {
+
+    public AudioSource deathAudioSource;
+    public AudioClip deathClip;
+
+
     public Tilemap tilemap;
     [Header("π÷ŒÔÀ¢–¬≈‰±»")]
     public List<Enemies> enemies;
@@ -128,7 +133,7 @@ public class EnemySpawner : MonoBehaviour
     public void OnEnemyKilled()
     {
         aliveEnemies--;
-
+        deathAudioSource.PlayOneShot(deathClip);
         if (aliveEnemies <= 0 && isWaveFinished && currentWave < maxWave)
         {
             FindObjectOfType<UpgradeUI>().ShowUpgradePanel();

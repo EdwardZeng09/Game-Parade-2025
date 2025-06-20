@@ -28,13 +28,12 @@ public class MeleeEnemyController : MonoBehaviour
     [SerializeField] private Canvas worldCanves;
 
 
-    
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        
         if (Player == null)
         {
             GameObject playerObj = GameObject.FindWithTag("Player");
@@ -69,32 +68,23 @@ public class MeleeEnemyController : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
     }
+    
 
-    //public void Attack()
-    //{
-    //    if (isAttack)
-    //    {
-    //        isAttack = false;
-    //        StartCoroutine(nameof(AttackCoroutine));
-    //    }
-    //}
 
-    //IEnumerator AttackCoroutine()
-    //{
-    //    animator.SetTrigger("isAttack");//或者bool类型触发动画
-    //    yield return new WaitForSeconds(attackCoolDuration);
-    //    //isAttack = true;
-    //}
+  
     public void EnemyHurt()
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
+        
     }
     public void Dead()
+
     {
+       
         DropManager.Instance.Drop(transform.position);
         isDead = true;
-        FindObjectOfType<EnemySpawner>().OnEnemyKilled();
+        FindObjectOfType<EnemySpawner>().OnEnemyKilled(); 
         Destroy(gameObject);
     }
 
