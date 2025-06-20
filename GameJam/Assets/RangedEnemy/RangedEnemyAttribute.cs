@@ -56,10 +56,12 @@ public class RangedEnemyAttribute :Character
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!collision.CompareTag("Player")) return;
+        Character player=collision.GetComponent<Character>();
+
+        if (player != null) 
         {
-            collision.GetComponent<Character>().TakeDamage(damage);
-            //调用玩家受击函数
+            player.TakeDamage(damage);
         }
     }
 
