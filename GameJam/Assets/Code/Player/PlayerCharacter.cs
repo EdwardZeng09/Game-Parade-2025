@@ -32,13 +32,26 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     private const float minRotationThreshold = 1f;
 
     private bool isOverheated = false;
-
+    
+    [Header("BuffDebuff设置")]
+    private float speedDebuffMultiplier = 1f;
+    private float baseMaxHealth;
+    private float damageTakenBonus = 0f;
+    private Camera mainCam;
+    private bool camIsOrtho;
+    private float baseViewValue;
     // Start is called before the first frame update
     void Start()
     {
+        baseMaxHealth = maxHealth;
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         UpdateHealthUI();
+        mainCam = Camera.main;
+        camIsOrtho = mainCam.orthographic;
+        baseViewValue = camIsOrtho
+            ? mainCam.orthographicSize
+            : mainCam.fieldOfView;
     }
 
     // Update is called once per frame
@@ -74,7 +87,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         }
         else
         {
-            rb.velocity = moveInput * moveSpeed;
+            rb.velocity = moveInput * moveSpeed * speedDebuffMultiplier;
         }
     }
 
@@ -112,7 +125,8 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     {
         if (IsDead) return;
         if (isRolling) return;
-        currentHealth -= amount;
+        float actualDamage = amount + damageTakenBonus;
+        currentHealth -= actualDamage;
         if (currentHealth <= 0)
         {
             currentHealth = 0;
@@ -158,5 +172,46 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         if (maxHealth > healthImages.Count) maxHealth = healthImages.Count; 
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         UpdateHealthUI();
+    }
+
+    public void ApplyWeakenedDebuff(int level)
+    {
+        speedDebuffMultiplier = 1f - 0.1f * level;
+        Debug.Log($"[Debuff] 已应用 虚弱 → 等级 {level}, 速度倍率 {speedDebuffMultiplier:P0}");
+    }
+    public void ApplySacrificeDebuff(int level)
+    {
+        float[] reduces = { 1f, 2f, 3f };
+        float pct = reduces[level - 1];
+        maxHealth = baseMaxHealth - pct;
+
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
+
+        UpdateHealthUI();
+
+        Debug.Log($"[Debuff] 已应用 牺牲 → 等级 {level}，最大生命 {maxHealth:F1}");
+    }
+
+    public void ApplyFragileDebuff(int level)
+    {
+        damageTakenBonus = level;
+        Debug.Log($"[Debuff] 已应用 易伤 → 等级 {level}, 额外受伤 +{damageTakenBonus}");
+    }
+
+    public void ApplyBlindnessDebuff(int level)
+    {
+        if (mainCam == null) return;
+
+        // 等级 → 减少比例
+        float[] reduces = { 0.2f, 0.4f, 0.6f };
+        float pct = reduces[Mathf.Clamp(level - 1, 0, reduces.Length - 1)];
+        float newValue = baseViewValue * (1f - pct);
+
+        if (camIsOrtho)
+            mainCam.orthographicSize = newValue;
+        else
+            mainCam.fieldOfView = newValue;
+
+        Debug.Log($"[Debuff] 已应用 致盲 → 等级 {level}, 视野缩小至 {newValue:F1} (减少 {pct:P0})");
     }
 }
