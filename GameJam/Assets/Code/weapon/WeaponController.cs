@@ -31,9 +31,30 @@ public class WeaponController : MonoBehaviour
     [Header("MultiShot 散射设置")]
     public float multiShotDamageFactor = 0f;   // Buff 等级 × 0.1f
     public float multiShotSpreadAngle = 15f; // 每发子弹偏转角度
+
+    [Header("ExplosiveAmmo Buff 设置")]
+    private bool useExplosiveAmmo = false;
+    private float explosiveRadius = 0f;
+    private float explosiveDamagePercent = 0f;
+
+    [Header("HeatCapacity Buff 设置")]
+    private float heatCapacityMultiplier = 1f;  
+    public float baseMaxHeat;                   
+
+    [Header("Overclock Buff 设置")]
+    private float overclockMultiplier = 1f;
+
+    [Header("Overdrive Buff 设置")]
+    private float overdriveMultiplier = 1f; 
+    private float baseCoolInterval;          
+    private float baseCoolAmount;            
+
     void Start()
     {
         player = FindObjectOfType<PlayerCharacter>();
+        baseMaxHeat = maxHeat;
+        baseCoolInterval = coolInterval;
+        baseCoolAmount = coolAmountPerTick;
     }
     void Update()
     {
@@ -61,13 +82,13 @@ public class WeaponController : MonoBehaviour
     {
         if (currentHeat > 0)
         {
-            float currentInterval = isOverheated ? 0.5f : coolInterval;
+            float currentInterval = isOverheated? 0.5f / overdriveMultiplier: baseCoolInterval / overdriveMultiplier;
 
             coolTimer += Time.deltaTime;
 
             if (coolTimer >= currentInterval)
             {
-                currentHeat -= coolAmountPerTick;
+                currentHeat -= baseCoolAmount * overdriveMultiplier;
                 currentHeat = Mathf.Clamp(currentHeat, 0, maxHeat);
                 coolTimer = 0f;
 
@@ -155,8 +176,14 @@ public class WeaponController : MonoBehaviour
     void FireBullet(Vector2 dir)
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        bullet.GetComponent<Bullet>().SetDirection(dir);
-        bullet.GetComponent<Bullet>().SetShooter(gameObject);
+        var b = bullet.GetComponent<Bullet>();
+        b.SetDirection(dir);
+        b.SetShooter(gameObject);
+        b.damage *= overclockMultiplier;
+        if (useExplosiveAmmo)
+        {
+            b.EnableExplosive(explosiveRadius, explosiveDamagePercent);
+        } 
         weaponSpriteController.FlashOnFire();
     }
 
@@ -172,5 +199,41 @@ public class WeaponController : MonoBehaviour
         // 每次额外两发子弹，伤害按 10%/20%/30% 计算
         multiShotDamageFactor = 0.1f * level;
         Debug.Log($"[Weapon] 已应用 MultiShot 散射 等级 {level}，额外子弹伤害 {multiShotDamageFactor:P0}");
+    }
+
+    public void ApplyExplosiveAmmoBuff(int level)
+    {
+        useExplosiveAmmo = true;
+        explosiveRadius = new float[] { 1f, 1.5f, 2f }[level - 1];        // 例：1 级 1 米, 2 级 1.5 米 ...
+        explosiveDamagePercent = new float[] { 0.5f, 0.75f, 1f }[level - 1];     // 50%、75%、100%
+        Debug.Log($"[Weapon] 已应用 爆裂子弹 Buff → 等级 {level}, 半径 {explosiveRadius}, 伤害{explosiveDamagePercent:P0}");
+    }
+
+    public void ApplyHeatCapacityBuff(int level)
+    {
+        // 等级 1~3 对应 +15%/+30%/+50%
+        float[] boosts = { 0.15f, 0.30f, 0.50f };
+        heatCapacityMultiplier = 1f + boosts[level - 1];
+        maxHeat = baseMaxHeat * heatCapacityMultiplier;
+
+        currentHeat = Mathf.Min(currentHeat + baseMaxHeat * boosts[level - 1], maxHeat);
+
+        Debug.Log($"[Weapon] 已应用 HeatCapacity Buff → 等级 {level}，新容量 {maxHeat:F1}");
+    }
+
+    public void ApplyOverclockBuff(int level)
+    {
+        // 每级增加 10%/20%/30%
+        overclockMultiplier = 1f + 0.1f * level;
+        Debug.Log($"[Weapon] 已应用 Overclock 聚能 → 等级 {level}，伤害倍率 {overclockMultiplier:P0}");
+    }
+
+    public void ApplyOverdriveBuff(int level)
+    {
+        // 等级 1/2/3 对应 +20%/+40%/+60%
+        overdriveMultiplier = 1f + 0.2f * level;
+
+        Debug.Log($"[Weapon] 已应用 Overdrive 超频 → 等级 {level}，" +
+                  $"降温速率 ×{overdriveMultiplier:F2}");
     }
 }

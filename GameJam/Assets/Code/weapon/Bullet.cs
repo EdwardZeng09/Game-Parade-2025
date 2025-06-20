@@ -10,6 +10,11 @@ public class Bullet : MonoBehaviour
     private Vector2 direction;
     private GameObject shooter;
 
+    
+    private bool isExplosive = false;
+    private float explosionRadius = 0f;
+    private float explosionDamagePercent = 0f;
+
     public void SetDirection(Vector2 dir)
     {
         direction = dir.normalized;
@@ -35,8 +40,35 @@ public class Bullet : MonoBehaviour
         IDamageable target = other.GetComponent<IDamageable>();
         if (target != null)
         {
-            target.TakeDamage(damage);
+            if (isExplosive)
+            {
+                // ① 主目标也吃爆炸伤害
+                float aoeDmg = damage * explosionDamagePercent;
+                target.TakeDamage(aoeDmg);
+
+                // ② 找周围的所有 IDamageable （按 LayerMask 过滤掉墙/地面）
+                Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+                foreach (var c in hits)
+                {
+                    if (c.gameObject == shooter) continue;
+                    var aoeTarget = c.GetComponent<IDamageable>();
+                    if (aoeTarget != null && c.gameObject != other.gameObject)
+                        aoeTarget.TakeDamage(aoeDmg);
+                }
+            }
+            else
+            {
+                // 普通子弹
+                target.TakeDamage(damage);
+            }
             Destroy(gameObject);
         }
+    }
+
+    public void EnableExplosive(float radius, float damagePercent)
+    {
+        isExplosive = true;
+        explosionRadius = radius;
+        explosionDamagePercent = damagePercent;
     }
 }

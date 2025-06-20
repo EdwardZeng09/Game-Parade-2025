@@ -36,10 +36,13 @@ public class UpgradeUI : MonoBehaviour
         debuffSelected = false;
 
         // 随机取 3 个选项
-        var rapid = buffManager.allBuffs.Find(b => b.id == "RapidFire");
-        var mult = buffManager.allBuffs.Find(b => b.id == "MultiShot");
-        currentBuffOptions = new List<BuffData> { rapid, mult, rapid };
-        //currentBuffOptions = GetRandom(buffManager.allBuffs, 3);
+        //var rapid = buffManager.allBuffs.Find(b => b.id == "RapidFire");
+        //var mult = buffManager.allBuffs.Find(b => b.id == "MultiShot");
+        //var exp = buffManager.allBuffs.Find(b => b.id == "ExplosiveAmmo");
+        //var heat = buffManager.allBuffs.Find(b => b.id == "HeatCapacity");
+        //var overclock = buffManager.allBuffs.Find(b => b.id == "Overclock");
+        //var overdrive = buffManager.allBuffs.Find(b => b.id == "Overdrive");
+        currentBuffOptions = GetRandom(buffManager.allBuffs, 3);
         currentDebuffOptions = GetRandom(buffManager.allDebuffs, 3);
 
         SetupBuffButtons();

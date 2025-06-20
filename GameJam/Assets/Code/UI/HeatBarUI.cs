@@ -6,6 +6,7 @@ using UnityEngine;
 public class HeatBarUI : MonoBehaviour
 {
     public Image heatFillImage;
+    public Image baseCapacityImage;
     public WeaponController weapon;
 
     void Update()
@@ -14,5 +15,10 @@ public class HeatBarUI : MonoBehaviour
 
         float fill = weapon.currentHeat / weapon.maxHeat;
         heatFillImage.fillAmount = Mathf.Clamp01(fill);
+        if (baseCapacityImage != null)
+        {
+            float baseFill = weapon.baseMaxHeat / weapon.maxHeat;
+            baseCapacityImage.fillAmount = Mathf.Clamp01(baseFill);
+        }
     }
 }

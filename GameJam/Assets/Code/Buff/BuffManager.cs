@@ -143,9 +143,23 @@ public class BuffManager : MonoBehaviour
             if (wc != null)
                 wc.ApplyMultiShotBuff(activeBuffs.Find(b => b.id == id).level);
         }
-
+        else if (id == "ExplosiveAmmo")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null)
+                wc.ApplyExplosiveAmmoBuff(activeBuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "HeatCapacity")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null) wc.ApplyHeatCapacityBuff(activeBuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "Overclock")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null) wc.ApplyOverclockBuff(activeBuffs.Find(b => b.id == id).level);
+        }
     }
-
     public void ApplyDebuff(string id)
     {
         // 在 allDebuffs 中查找基础数据
