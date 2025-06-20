@@ -159,6 +159,11 @@ public class BuffManager : MonoBehaviour
             var wc = FindObjectOfType<WeaponController>();
             if (wc != null) wc.ApplyOverclockBuff(activeBuffs.Find(b => b.id == id).level);
         }
+        else if (id == "Overdrive")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null) wc.ApplyOverdriveBuff(activeBuffs.Find(b => b.id == id).level);
+        }
     }
     public void ApplyDebuff(string id)
     {
