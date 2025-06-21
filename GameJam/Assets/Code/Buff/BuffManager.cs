@@ -86,12 +86,12 @@ public class BuffManager : MonoBehaviour
             description = "受到伤害提高（10%/20%/30%）",
             level = 0
         },
-        new DebuffData {
-            id = "Wither",
-            displayName = "Wither",
-            description = "回血效果减少（10%/20%/30%）",
-            level = 0
-        },
+        //new DebuffData {
+        //   id = "Wither",
+        //    displayName = "Wither",
+        //   description = "回血效果减少（10%/20%/30%）",
+        //    level = 0
+        //},
         new DebuffData {
             id = "Blindness",
             displayName = "Blindness",
@@ -188,6 +188,37 @@ public class BuffManager : MonoBehaviour
                 description = baseDebuff.description,
                 level = 1
             });
+        }
+
+        if (id == "Weakened")
+        {
+            var player = FindObjectOfType<PlayerCharacter>();
+            if (player != null)
+                player.ApplyWeakenedDebuff(activeDebuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "Sacrifice")
+        {
+            var player = FindObjectOfType<PlayerCharacter>();
+            if (player != null)
+                player.ApplySacrificeDebuff(activeDebuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "Fragile")
+        {
+            var player = FindObjectOfType<PlayerCharacter>();
+            if (player != null)
+                player.ApplyFragileDebuff(activeDebuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "Blindness")
+        {
+            var player = FindObjectOfType<PlayerCharacter>();
+            if (player != null)
+                player.ApplyBlindnessDebuff(activeDebuffs.Find(b => b.id == id).level);
+        }
+        else if (id == "Berserk")
+        {
+            var wc = FindObjectOfType<WeaponController>();
+            if (wc != null)
+                wc.ApplyBerserkBuff(activeDebuffs.Find(b => b.id == id).level);
         }
     }
 }

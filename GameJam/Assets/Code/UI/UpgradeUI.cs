@@ -43,6 +43,11 @@ public class UpgradeUI : MonoBehaviour
         //var overclock = buffManager.allBuffs.Find(b => b.id == "Overclock");
         //var overdrive = buffManager.allBuffs.Find(b => b.id == "Overdrive");
         currentBuffOptions = GetRandom(buffManager.allBuffs, 3);
+        //var weak = buffManager.allDebuffs.Find(b => b.id == "Weakened");
+        //var sacrifice = buffManager.allDebuffs.Find(b => b.id == "Sacrifice");
+        //var fragile = buffManager.allDebuffs.Find(b => b.id == "Fragile");
+        //var blindness = buffManager.allDebuffs.Find(b => b.id == "Blindness");
+        //var berserk = buffManager.allDebuffs.Find(b => b.id == "Berserk");
         currentDebuffOptions = GetRandom(buffManager.allDebuffs, 3);
 
         SetupBuffButtons();

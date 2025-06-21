@@ -47,7 +47,12 @@ public class WeaponController : MonoBehaviour
     [Header("Overdrive Buff 设置")]
     private float overdriveMultiplier = 1f; 
     private float baseCoolInterval;          
-    private float baseCoolAmount;            
+    private float baseCoolAmount;
+
+    [Header("Berserk Debuff 设置")]
+    private float berserkExtraDuration = 0f; // 由 Debuff 设定：1/2/3 秒
+    private bool berserkExtraActive = false;
+    private float berserkExtraTimer = 0f;
 
     void Start()
     {
@@ -82,23 +87,53 @@ public class WeaponController : MonoBehaviour
     {
         if (currentHeat > 0)
         {
-            float currentInterval = isOverheated? 0.5f / overdriveMultiplier: baseCoolInterval / overdriveMultiplier;
+            float currentInterval = isOverheated
+                ? 0.5f / overdriveMultiplier
+                : baseCoolInterval / overdriveMultiplier;
 
             coolTimer += Time.deltaTime;
-
             if (coolTimer >= currentInterval)
             {
                 currentHeat -= baseCoolAmount * overdriveMultiplier;
                 currentHeat = Mathf.Clamp(currentHeat, 0, maxHeat);
                 coolTimer = 0f;
+            }
+        }
 
-                if (isOverheated && currentHeat <= 0)
+        // 当冷却到 0 且当前处于过热状态
+        if (isOverheated && currentHeat <= 0f)
+        {
+            // 第一次触发 extra 逻辑
+            if (!berserkExtraActive && berserkExtraDuration > 0f)
+            {
+                berserkExtraActive = true;
+                berserkExtraTimer = berserkExtraDuration;
+                Debug.Log($"[Weapon] 进入额外失控阶段，持续 {berserkExtraDuration} 秒");
+            }
+
+            // 如果处于 extra 失控阶段，则倒计时
+            if (berserkExtraActive)
+            {
+                berserkExtraTimer -= Time.deltaTime;
+                if (berserkExtraTimer <= 0f)
                 {
+                    // 结束失控
                     isOverheated = false;
+                    berserkExtraActive = false;
+                    berserkExtraDuration = 0f;
                     player.ExitOverheatMovement();
                     weaponRotator.ExitOverheat();
                     overheatBar.SetOverheatState(false);
+                    Debug.Log("[Weapon] 额外失控结束，恢复正常");
                 }
+            }
+            else
+            {
+                // 没有 extra，直接恢复
+                isOverheated = false;
+                player.ExitOverheatMovement();
+                weaponRotator.ExitOverheat();
+                overheatBar.SetOverheatState(false);
             }
         }
     }
@@ -235,5 +270,11 @@ public class WeaponController : MonoBehaviour
 
         Debug.Log($"[Weapon] 已应用 Overdrive 超频 → 等级 {level}，" +
                   $"降温速率 ×{overdriveMultiplier:F2}");
+    }
+
+    public void ApplyBerserkBuff(int level)
+    {
+        berserkExtraDuration = Mathf.Clamp(level, 1, 3);
+        Debug.Log($"[Weapon] 应用 Berserk Debuff → 额外失控 {berserkExtraDuration} 秒");
     }
 }
