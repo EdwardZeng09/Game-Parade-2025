@@ -105,7 +105,7 @@ MonoBehaviour:
   pickupRadius: 1
   moveSpeed: 20
   pickupDistance: 0.2
-  HP: 10
+  HP: 1
 --- !u!50 &8253590108604031331
 Rigidbody2D:
   serializedVersion: 4

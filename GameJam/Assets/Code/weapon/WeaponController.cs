@@ -24,6 +24,7 @@ public class WeaponController : MonoBehaviour
     public WeaponRotator weaponRotator;
     public WeaponSpriteController weaponSpriteController;
     public OverheatBarSwitcher overheatBar;
+    private UpgradeUI upgradeUI;
 
     [Header("RapidFire…Ë÷√")]
     private float rapidFireMultiplier = 1f;
@@ -57,12 +58,15 @@ public class WeaponController : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<PlayerCharacter>();
+        upgradeUI = FindObjectOfType<UpgradeUI>();
         baseMaxHeat = maxHeat;
         baseCoolInterval = coolInterval;
         baseCoolAmount = coolAmountPerTick;
     }
     void Update()
     {
+        if (upgradeUI != null && upgradeUI.panel.activeSelf)
+            return;
         fireCooldown -= Time.deltaTime;
         HandleCooling();
         if (isOverheated)
