@@ -132,10 +132,11 @@ public class EnemySpawner : MonoBehaviour
 
     public void OnEnemyKilled()
     {
-        aliveEnemies--;
+        aliveEnemies = Mathf.Max(0, aliveEnemies - 1);
         deathAudioSource.PlayOneShot(deathClip);
-        if (aliveEnemies <= 0 && isWaveFinished && currentWave < maxWave)
+        if (aliveEnemies == 0 && isWaveFinished && currentWave < maxWave && !waitingForUpgrade)
         {
+            waitingForUpgrade = true;
             FindObjectOfType<UpgradeUI>().ShowUpgradePanel();
         }
     }

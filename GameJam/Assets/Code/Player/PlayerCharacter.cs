@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerCharacter : MonoBehaviour, IDamageable
 {
+    public Animator animator;
+    private SpriteRenderer sr;
     [Header("ÑªÁ¿UI")]
     public List<Image> healthImages;
     public Sprite heartFull;
@@ -45,6 +47,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
     {
         baseMaxHealth = maxHealth;
         currentHealth = maxHealth;
+        sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         UpdateHealthUI();
         mainCam = Camera.main;
@@ -63,6 +66,9 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
             moveInput.x = Input.GetAxisRaw("Horizontal");
             moveInput.y = Input.GetAxisRaw("Vertical");
             moveInput.Normalize();
+            animator.SetFloat("Speed", moveInput.magnitude);
+            if (moveInput.x < 0) sr.flipX = true;
+            else if (moveInput.x > 0) sr.flipX = false;
         }
         if (!isOverheated && Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
         {

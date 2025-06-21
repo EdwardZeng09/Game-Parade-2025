@@ -9,8 +9,8 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 2f;
     private Vector2 direction;
     private GameObject shooter;
+    public GameObject explosionPrefab;
 
-    
     private bool isExplosive = false;
     private float explosionRadius = 0f;
     private float explosionDamagePercent = 0f;
@@ -18,10 +18,12 @@ public class Bullet : MonoBehaviour
     public void SetDirection(Vector2 dir)
     {
         direction = dir.normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
     void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
         lifeTime -= Time.deltaTime;
         if (lifeTime <= 0f)
@@ -61,6 +63,7 @@ public class Bullet : MonoBehaviour
                 // ÆÕÍ¨×Óµ¯
                 target.TakeDamage(damage);
             }
+            Instantiate(explosionPrefab,transform.position,Quaternion.identity);
             Destroy(gameObject);
         }
     }
