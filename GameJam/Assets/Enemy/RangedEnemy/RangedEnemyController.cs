@@ -27,6 +27,13 @@ public class RangedEnemyController : MonoBehaviour
     public Transform shotPoint;
 
     public Transform Player;
+
+    public AudioSource HurtAudioSource;
+
+    //[Header("Fade控制")]
+    //[SerializeField] public Material enemyMaterial;
+    //[SerializeField] public float fadeDuration = 2f;
+    //public float currentFadeValue = 1f;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -41,7 +48,8 @@ public class RangedEnemyController : MonoBehaviour
                     Player = playerObj.transform;
                 }
             }
-        
+        //GetComponent<SpriteRenderer>().material = enemyMaterial;
+       
     }
 
     private void FixedUpdate()
@@ -101,13 +109,15 @@ public class RangedEnemyController : MonoBehaviour
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
+        HurtAudioSource.Play();
     }
     public void Dead()
     {
         DropManager.Instance.Drop(transform.position);
         isDead = true;
         FindObjectOfType<EnemySpawner>().OnEnemyKilled();
-        Destroy(gameObject);
+        //StartCoroutine(FadeOutAndDestroy());
+       Destroy(gameObject);
     }
 
     public void SetAnimation()
@@ -129,4 +139,38 @@ public class RangedEnemyController : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         canMove = true;
     }
+
+
+    //IEnumerator FadeOutAndDestroy()
+    //{
+    //    float startFade = currentFadeValue;
+    //    float endFade = 0f;
+    //    float timeElapsed = 0f;
+    //    canMove = false;
+
+    //    // 确保每次修改后都强制应用材质
+    //    if (GetComponent<SpriteRenderer>().material != enemyMaterial)
+    //    {
+    //        GetComponent<SpriteRenderer>().material = enemyMaterial;
+    //    }
+
+    //    while (timeElapsed < fadeDuration)
+    //    {
+    //        currentFadeValue = Mathf.Lerp(startFade, endFade, timeElapsed / fadeDuration);
+
+    //        // 确保更新透明度并强制刷新材质
+    //        enemyMaterial.SetFloat("Fade", currentFadeValue);
+    //        GetComponent<SpriteRenderer>().material = enemyMaterial;  // 强制更新材质
+
+    //        timeElapsed += Time.deltaTime;
+    //        yield return null;
+    //    }
+
+    //    currentFadeValue = endFade;
+    //    enemyMaterial.SetFloat("Fade", currentFadeValue);
+
+    //    // 销毁物体
+    //    Debug.Log("Fade finished, destroying object.");
+    //    Destroy(gameObject);
+    //}
 }

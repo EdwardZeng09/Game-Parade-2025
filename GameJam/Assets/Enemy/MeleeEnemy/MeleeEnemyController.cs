@@ -24,9 +24,12 @@ public class MeleeEnemyController : MonoBehaviour
    
     public bool canMove=true;
 
-    //[SerializeField] private GameObject damageTextPrefab;
-    //[SerializeField] private Canvas worldCanves;
+    //[Header("Fade控制")]
+    //[SerializeField] public Material enemyMaterial;
+    //[SerializeField] public float fadeDuration = 2f;
+    //public float currentFadeValue = 1f;
 
+    public AudioSource HurtAudioSource;
 
     private void Awake()
     {
@@ -58,9 +61,9 @@ public class MeleeEnemyController : MonoBehaviour
             rb.velocity = MovementInput * currentSpeed;
 
             //敌人朝向翻转
-            if (MovementInput.x < 0)
-                sr.flipX = true;
             if (MovementInput.x > 0)
+                sr.flipX = true;
+            if (MovementInput.x < 0)
                 sr.flipX = false;
         }
         else
@@ -70,13 +73,11 @@ public class MeleeEnemyController : MonoBehaviour
     }
     
 
-
-  
     public void EnemyHurt()
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
-        
+        HurtAudioSource.Play();
     }
     public void Dead()
 
@@ -84,7 +85,8 @@ public class MeleeEnemyController : MonoBehaviour
        
         DropManager.Instance.Drop(transform.position);
         isDead = true;
-        FindObjectOfType<EnemySpawner>().OnEnemyKilled(); 
+        FindObjectOfType<EnemySpawner>().OnEnemyKilled();
+        //StartCoroutine(FadeOutAndDestroy());
         Destroy(gameObject);
     }
 
@@ -120,10 +122,24 @@ public class MeleeEnemyController : MonoBehaviour
     }
 
 
-    //public void ShowDamageText(float damage) 
+    //IEnumerator FadeOutAndDestroy() 
     //{
-    //Vector3 spawnPos= transform.position+new Vector3(0,1f,0);
-    //GameObject obj = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity, worldCanves.transform);
-    //    obj.GetComponent<DamageText>().SetText(damage.ToString("F0"));
+    //float startFade=currentFadeValue;
+    //    float endFade=0f;
+
+    //    float timeElapsed = 0f;
+    //    while (timeElapsed < fadeDuration) 
+    //    {
+    //        currentFadeValue = Mathf.SmoothStep(startFade, endFade, timeElapsed / fadeDuration);
+    //        enemyMaterial.SetFloat("Fade", currentFadeValue);
+    //        timeElapsed+= Time.deltaTime;
+    //        yield return null;
+    //        Debug.Log("1");
+    //    }
+    //    Debug.Log("Fade finished, destroying object.");
+    //    currentFadeValue =endFade;
+    //    enemyMaterial.SetFloat("Fade", currentFadeValue);
+
+    //    Destroy(gameObject);
     //}
 }

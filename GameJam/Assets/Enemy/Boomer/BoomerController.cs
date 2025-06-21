@@ -30,6 +30,7 @@ public class BoomerController : MonoBehaviour
 
     [SerializeField] public float knockbackForce = 5f;
 
+    public AudioSource HurtAudioSource;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -123,6 +124,7 @@ public class BoomerController : MonoBehaviour
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
+        HurtAudioSource.Play();
     }
     public void Dead()
     {

@@ -9,8 +9,13 @@ public class BlueDrops : MonoBehaviour
     [SerializeField] public float pickupRadius = 2f;
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] public float pickupDistance = 0.2f;
-    
+
+
+    public AudioSource deathAudioSource;
+    public AudioClip deathClip;
+
     private Transform targetPlayer;
+    public int i = 0;
     private void Update()
     {
         if (targetPlayer == null)
@@ -26,10 +31,13 @@ public class BlueDrops : MonoBehaviour
             Vector3 dir = (targetPlayer.position - transform.position).normalized;
             transform.position += dir * moveSpeed * Time.deltaTime;
 
-            if (Vector3.Distance(transform.position, targetPlayer.position) < pickupDistance)
+            if (Vector3.Distance(transform.position, targetPlayer.position) < pickupDistance&&i==0)
             {
                 OnPickup(targetPlayer.gameObject);
-                Destroy(gameObject);
+                deathAudioSource.Play();
+                StartCoroutine(Delay());
+              
+                i++;
             }
         }
     }
@@ -44,5 +52,11 @@ public class BlueDrops : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
+    }
+
+    IEnumerator Delay() 
+    { 
+        yield return new WaitForSeconds(1f); 
+        Destroy(gameObject);
     }
 }
