@@ -202,8 +202,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   knockbackForce: 5
   canMove: 1
-  damageTextPrefab: {fileID: 0}
-  worldCanves: {fileID: 0}
+  AudioSource: {fileID: 8467254986530021098}
 --- !u!70 &-3706834499195295830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -270,7 +269,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f5dd43eed8ba2ad498ce22ebc5b0ded9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b1bd0b9e14002de4bb81910ba0881163, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

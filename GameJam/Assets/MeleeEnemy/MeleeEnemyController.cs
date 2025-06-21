@@ -27,6 +27,7 @@ public class MeleeEnemyController : MonoBehaviour
     //[SerializeField] private GameObject damageTextPrefab;
     //[SerializeField] private Canvas worldCanves;
 
+    public AudioSource AudioSource;
 
     private void Awake()
     {
@@ -76,7 +77,7 @@ public class MeleeEnemyController : MonoBehaviour
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
-        
+        AudioSource.Play();
     }
     public void Dead()
 

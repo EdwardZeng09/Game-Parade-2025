@@ -27,6 +27,8 @@ public class RangedEnemyController : MonoBehaviour
     public Transform shotPoint;
 
     public Transform Player;
+
+    public AudioSource AudioSource;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -101,6 +103,7 @@ public class RangedEnemyController : MonoBehaviour
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
+        AudioSource.Play();
     }
     public void Dead()
     {

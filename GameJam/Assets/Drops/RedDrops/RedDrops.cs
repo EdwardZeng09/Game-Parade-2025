@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class RedDrops : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class RedDrops : MonoBehaviour
     [SerializeField] public float pickupDistance = 0.2f;
     [SerializeField] public float HP = 10f;
     private Transform targetPlayer;
+
+
+    public AudioSource source;
+    public int i = 0;
     private void Update()
     {
         if (targetPlayer == null)
@@ -26,10 +31,11 @@ public class RedDrops : MonoBehaviour
         Vector3 dir=(targetPlayer.position-transform.position).normalized;
             transform.position += dir * moveSpeed * Time.deltaTime;
 
-            if (Vector3.Distance(transform.position, targetPlayer.position) < pickupDistance) 
+            if (Vector3.Distance(transform.position, targetPlayer.position) < pickupDistance&&i==0) 
             {
                 OnPickup(targetPlayer.gameObject);
-                Destroy(gameObject);
+                StartCoroutine(Delay());
+                i++;
             }
         }
     }
@@ -47,5 +53,12 @@ public class RedDrops : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
+    }
+
+    IEnumerator Delay() 
+    {
+    source.Play();
+    yield  return new WaitForSeconds(0.5f);
+    Destroy(gameObject);
     }
 }
