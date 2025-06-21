@@ -242,6 +242,27 @@ CapsuleCollider2D:
   m_Offset: {x: 0.040960833, y: -0.109234}
   m_Size: {x: 3.0187924, y: 5.5857778}
   m_Direction: 0
+--- !u!95 &168479029
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168479020}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f0896d83ef3accc4fa919877f68a01eb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &185895747
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +297,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -966, y: 440}
+  m_AnchoredPosition: {x: -938, y: 454}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185895749
@@ -2650,6 +2671,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6985946205447407862, guid: aa64794b0b1f86f4496fb801dd743831, type: 3}
       insertIndex: -1
       addedObject: {fileID: 168479024}
+    - targetCorrespondingSourceObject: {fileID: 6985946205447407862, guid: aa64794b0b1f86f4496fb801dd743831, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 168479029}
     - targetCorrespondingSourceObject: {fileID: 6182330092904425118, guid: aa64794b0b1f86f4496fb801dd743831, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1421911140}

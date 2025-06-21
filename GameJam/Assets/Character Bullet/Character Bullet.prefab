@@ -129,6 +129,7 @@ MonoBehaviour:
   speed: 10
   damage: 30
   lifeTime: 2
+  explosionPrefab: {fileID: 826802992259217332, guid: 3f3b45b0e623b5542857161355173abd, type: 3}
 --- !u!60 &254219098282795236
 PolygonCollider2D:
   m_ObjectHideFlags: 0
