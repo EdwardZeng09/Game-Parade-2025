@@ -427,6 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdeec3bd27c107b4b8b095a0ac4cabad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathAudioSource: {fileID: 0}
+  deathClip: {fileID: 0}
   tilemap: {fileID: 0}
   enemies:
   - prefab: {fileID: 35023809186080666, guid: 70f8fc797516ff24489623effe74b2ab, type: 3}
@@ -438,7 +440,11 @@ MonoBehaviour:
   spawnChange: 1
   spawnDelay: 5
   spawnTimer: 0
+  enemiesPerWave: 5
   Num: 2
+  maxWave: 3
+  waveText: {fileID: 0}
+  upgradePanel: {fileID: 0}
 --- !u!1 &9062114423988427303
 GameObject:
   m_ObjectHideFlags: 0
