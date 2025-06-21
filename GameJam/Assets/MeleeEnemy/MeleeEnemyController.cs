@@ -24,8 +24,8 @@ public class MeleeEnemyController : MonoBehaviour
    
     public bool canMove=true;
 
-    [SerializeField] private GameObject damageTextPrefab;
-    [SerializeField] private Canvas worldCanves;
+    //[SerializeField] private GameObject damageTextPrefab;
+    //[SerializeField] private Canvas worldCanves;
 
 
     private void Awake()
@@ -120,10 +120,10 @@ public class MeleeEnemyController : MonoBehaviour
     }
 
 
-    public void ShowDamageText(float damage) 
-    {
-    Vector3 spawnPos= transform.position+new Vector3(0,1f,0);
-    GameObject obj = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity, worldCanves.transform);
-        obj.GetComponent<DamageText>().SetText(damage.ToString("F0"));
-    }
+    //public void ShowDamageText(float damage) 
+    //{
+    //Vector3 spawnPos= transform.position+new Vector3(0,1f,0);
+    //GameObject obj = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity, worldCanves.transform);
+    //    obj.GetComponent<DamageText>().SetText(damage.ToString("F0"));
+    //}
 }
