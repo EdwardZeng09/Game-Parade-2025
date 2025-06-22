@@ -102,8 +102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2756f76a77a8d42a3926e489182ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 40
+  currentHealth: 40
   invulnerable: 0
   invulnerableDuration: 0
   OnHurt:
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af34e05fb94abd46a8fdf472f8bb18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 3
+  currentSpeed: 6
   damage: 1
   explosionRadius: 2
   chaseRadius: 1
@@ -230,9 +230,9 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.32, y: 0.32}
-  m_Direction: 0
+  m_Offset: {x: 0.20412874, y: -0.80472654}
+  m_Size: {x: 4.0256405, y: 3.2798376}
+  m_Direction: 1
 --- !u!50 &2809602822412260741
 Rigidbody2D:
   serializedVersion: 4
