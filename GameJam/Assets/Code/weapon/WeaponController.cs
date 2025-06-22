@@ -8,7 +8,7 @@ public class WeaponController : MonoBehaviour
     public Transform firePoint;
     public float baseFireRate = 1f;
     private float fireCooldown = 0f;
-
+    public AudioSource AudioSource;
     [Header("Œ¬øÿ…Ë÷√")]
     public float currentHeat = 0f;
     public float maxHeat = 100f;
@@ -227,7 +227,8 @@ public class WeaponController : MonoBehaviour
         if (useExplosiveAmmo)
         {
             b.EnableExplosive(explosiveRadius, explosiveDamagePercent);
-        } 
+        }
+        AudioSource.Play();
         weaponSpriteController.FlashOnFire();
     }
 
