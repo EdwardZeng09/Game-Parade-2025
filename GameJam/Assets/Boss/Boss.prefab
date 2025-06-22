@@ -178,7 +178,7 @@ MonoBehaviour:
   bulletCount: 8
   fireRate: 1
   fireDelay: 6
-  AudioSource: {fileID: 0}
+  AudioSource: {fileID: 7550141882211924424}
 --- !u!114 &3058582950121911373
 MonoBehaviour:
   m_ObjectHideFlags: 0
