@@ -26,18 +26,37 @@ public class StartButton : MonoBehaviour
         }
         else
         {
-            LoadDemoScene();
+            LoadSceneByButtonName();
         }
     }
 
     private IEnumerator WaitAndLoadScene(float delay)
     {
         yield return new WaitForSeconds(delay);
-        LoadDemoScene();
+        LoadSceneByButtonName();
     }
 
-    private void LoadDemoScene()
+    private void LoadSceneByButtonName()
     {
-        SceneManager.LoadScene("BasicGameEnvironment");
+        string btnName = gameObject.name;
+
+        switch (btnName)
+        {
+            case "btnStart":
+                SceneManager.LoadScene("BasicGameEnvironment");
+                break;
+            case "btnHelp":
+                SceneManager.LoadScene("Help");
+                break;
+            case "btnCredits":
+                SceneManager.LoadScene("Members");
+                break;
+            case "btnBack":
+                SceneManager.LoadScene("Mainmenu");
+                break;
+            default:
+                Debug.LogWarning("Unrecognized button name: " + btnName);
+                break;
+        }
     }
 }
