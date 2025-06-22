@@ -23,6 +23,7 @@ public class UpgradeUI : MonoBehaviour
     public TMP_Text descriptionText;
     private BuffManager buffManager;
     private EnemySpawner spawner;
+    private WeaponController weapon;
     public Image[] buffIconSlots;    
     public Image[] debuffIconSlots;
     private List<BuffData> buffOptions;
@@ -35,6 +36,7 @@ public class UpgradeUI : MonoBehaviour
     {
         buffManager = FindObjectOfType<BuffManager>();
         spawner = FindObjectOfType<EnemySpawner>();
+        weapon = FindObjectOfType<WeaponController>();
         continueButton.onClick.AddListener(OnContinueClicked);
         continueButton.interactable = false;
     }
@@ -50,7 +52,7 @@ public class UpgradeUI : MonoBehaviour
         // 随机取三
         buffOptions = GetRandom(availableBuffs, buffOptionButtons.Count);
         debuffOptions = GetRandom(availableDebuffs, debuffOptionButtons.Count);
-
+        weapon.ClearHeat();
         // 更新顶部已选列表
         PopulateSelectedLists();
 
@@ -66,26 +68,44 @@ public class UpgradeUI : MonoBehaviour
 
     void PopulateSelectedLists()
     {
-        // 已选 Buff
         for (int i = 0; i < selectedBuffButtons.Count; i++)
         {
             var btn = selectedBuffButtons[i];
             if (i < buffManager.activeBuffs.Count)
             {
                 var data = buffManager.activeBuffs[i];
-                SetButton(btn, $"{data.displayName} Lv{data.level}",
-                    () =>
-                    {
-                        if (buffPoints <= 0 || data.level >= 3) return;
-                        buffManager.ApplyBuff(data.id);
-                        buffPoints--;
-                        buffPointText.text = $"Buff Points: {buffPoints}";
-                        // 更新按钮文本为新等级
-                        btn.GetComponentInChildren<TMP_Text>().text = $"{data.displayName} Lv{data.level}";
-                    });
+
+                // 给Image换图
+                var img = btn.GetComponent<Image>();
+                img.sprite = data.icon;
+                img.type = Image.Type.Simple;
+                img.preserveAspect = true;
+
+                // 隐藏文字（如果有Text）
+                var txt = btn.GetComponentInChildren<TMP_Text>();
+                if (txt != null) txt.enabled = false;
+
+                // 交互：只有有点数且没到满级时才能升级
+                btn.interactable = (buffPoints > 0 && data.level < 3);
+
+                // 点击升级
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    if (buffPoints <= 0 || data.level >= 3) return;
+                    buffManager.ApplyBuff(data.id);
+                    buffPoints--;
+                    buffPointText.text = $"Buff Points: {buffPoints}";
+                    UpdateSelectedIcons();
+                    PopulateSelectedLists();
+                });
+
                 btn.gameObject.SetActive(true);
             }
-            else btn.gameObject.SetActive(false);
+            else
+            {
+                btn.gameObject.SetActive(false);
+            }
         }
 
         // 已选 Debuff
@@ -95,18 +115,36 @@ public class UpgradeUI : MonoBehaviour
             if (i < buffManager.activeDebuffs.Count)
             {
                 var data = buffManager.activeDebuffs[i];
-                SetButton(btn, $"{data.displayName} Lv{data.level}",
-                    () =>
-                    {
-                        if (data.level >= 3) return;
-                        buffManager.ApplyDebuff(data.id);
-                        buffPoints++;
-                        buffPointText.text = $"Buff Points: {buffPoints}";
-                        btn.GetComponentInChildren<TMP_Text>().text = $"{data.displayName} Lv{data.level}";
-                    });
+
+                // 给Image换图
+                var img = btn.GetComponent<Image>();
+                img.sprite = data.icon;
+                img.type = Image.Type.Simple;
+                img.preserveAspect = true;
+
+                // 隐藏文字
+                var txt = btn.GetComponentInChildren<TMP_Text>();
+                if (txt != null) txt.enabled = false;
+
+                // 点击升级Debuff，升级时 +1 buffPoint
+                btn.interactable = (data.level < 3);
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    if (data.level >= 3) return;
+                    buffManager.ApplyDebuff(data.id);
+                    buffPoints++;
+                    buffPointText.text = $"Buff Points: {buffPoints}";
+                    UpdateSelectedIcons();
+                    PopulateSelectedLists();
+                });
+
                 btn.gameObject.SetActive(true);
             }
-            else btn.gameObject.SetActive(false);
+            else
+            {
+                btn.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -147,50 +185,32 @@ public class UpgradeUI : MonoBehaviour
 
             var data = datas[i];
             btn.gameObject.SetActive(true);
+            btn.interactable = true;
 
-            // extract the displayName statically
-            string label;
-            string desc;
-            if (data is BuffData bd)
-            {
-                label = bd.displayName;
-                desc = bd.description;  
-            }
-            else if (data is DebuffData dd)
-            {
-                label = dd.displayName;
-                desc = dd.description;          
-            }
-            else
-            {
-                label = data.ToString();
-                desc = "";
-            }
+ 
+            var txt = btn.GetComponentInChildren<TMP_Text>();
+                    if (txt != null) txt.enabled = false;
 
-            SetButton(btn, label, () => callback(data, btn));
+            var img = btn.GetComponent<Image>();
+            img.sprite = (data is BuffData bd) ? bd.icon : ((DebuffData)(object)data).icon;
+            img.type = Image.Type.Sliced;     
+            img.preserveAspect = true;
+
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() => callback(data, btn));
+
             var trigger = btn.GetComponent<EventTrigger>();
             if (trigger == null) trigger = btn.gameObject.AddComponent<EventTrigger>();
             trigger.triggers.Clear();
+            string desc = (data is BuffData b2) ? b2.description : ((DebuffData)(object)data).description;
 
-            // Pointer Enter
-            var entryEnter = new EventTrigger.Entry
-            {
-                eventID = EventTriggerType.PointerEnter
-            };
-            entryEnter.callback.AddListener((_) => {
-                descriptionText.text = desc;
-            });
-            trigger.triggers.Add(entryEnter);
+            var e1 = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            e1.callback.AddListener(_ => descriptionText.text = desc);
+            trigger.triggers.Add(e1);
 
-            // Pointer Exit
-            var entryExit = new EventTrigger.Entry
-            {
-                eventID = EventTriggerType.PointerExit
-            };
-            entryExit.callback.AddListener((_) => {
-                descriptionText.text = "";
-            });
-            trigger.triggers.Add(entryExit);
+            var e2 = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+            e2.callback.AddListener(_ => descriptionText.text = "");
+            trigger.triggers.Add(e2);
         }
     }
 

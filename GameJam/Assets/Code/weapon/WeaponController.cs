@@ -300,4 +300,13 @@ public class WeaponController : MonoBehaviour
         currentHeat -= CoolDrops;
     
     }
+
+    public void ClearHeat()
+    {
+        currentHeat = 0f;
+        isOverheated = false;
+        player.ExitOverheatMovement();
+        weaponRotator.ExitOverheat();
+        overheatBar.SetOverheatState(false);
+    }
 }
