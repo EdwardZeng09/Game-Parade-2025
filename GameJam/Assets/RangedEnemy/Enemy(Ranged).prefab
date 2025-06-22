@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.28, y: 0.77, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7323105929813701901}
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa7ade656d742548a4ba36e464584f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 2
+  currentSpeed: 3
   isAttack: 1
   attackCoolDuration: 1
   knockbackForce: 5
