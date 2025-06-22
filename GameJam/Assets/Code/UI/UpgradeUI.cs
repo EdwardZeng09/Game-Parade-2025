@@ -158,6 +158,7 @@ public class UpgradeUI : MonoBehaviour
         UpdateSelectedIcons();
         buffOptionButtons.ForEach(b => b.interactable = false);
         TryEnableContinue();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void OnDebuffOptionClicked(DebuffData data, Button btn)
@@ -170,6 +171,7 @@ public class UpgradeUI : MonoBehaviour
         UpdateSelectedIcons();
         debuffOptionButtons.ForEach(b => b.interactable = false);
         TryEnableContinue();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void SetupOptionButtons<T>(List<Button> buttons, List<T> datas, System.Action<T, Button> callback)
@@ -245,7 +247,8 @@ public class UpgradeUI : MonoBehaviour
     void OnContinueClicked()
     {
         panel.SetActive(false);
-        spawner.OnUpgradeSelected();// Лђеп OnUpgradeSelected()
+        spawner.OnUpgradeSelected();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void UpdateSelectedIcons()
