@@ -17,94 +17,8 @@ public class BuffManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
 
-        InitBuffList();
-        InitDebuffList();
-    }
-
-    void InitBuffList()
-    {
-        allBuffs = new List<BuffData>
-    {
-        new BuffData {
-            id = "RapidFire",
-            displayName = "RapidFire",
-            description = "弹道射速加快（10%/20%/30%）",
-            level = 0
-        },
-        new BuffData {
-            id = "ExplosiveAmmo",
-            displayName = "ExplosiveAmmo",
-            description = "子弹命中有范围伤害（小/中/大 半径）",
-            level = 0
-        },
-        new BuffData {
-            id = "MultiShot",
-            displayName = "MultiShot",
-            description = "每次射击额外发出子弹（每发伤害为10%）",
-            level = 0
-        },
-        new BuffData {
-            id = "HeatCapacity",
-            displayName = "HeatCapacity",
-            description = "温度条变长（15%/30%/50%）",
-            level = 0
-        },
-        new BuffData {
-            id = "Overclock",
-            displayName = "Overclock",
-            description = "单发子弹伤害增加（10%/20%/30%）",
-            level = 0
-        },
-        new BuffData {
-            id = "Overdrive",
-            displayName = "Overdrive",
-            description = "武器散热更快（20%/40%/60%）",
-            level = 0
-        }
-    };
-    }
-
-    void InitDebuffList()
-    {
-        allDebuffs = new List<DebuffData>
-    {
-        new DebuffData {
-            id = "Weakened",
-            displayName = "Weakened",
-            description = "移动速度变慢（10%/20%/30%）",
-            level = 0
-        },
-        new DebuffData {
-            id = "Sacrifice",
-            displayName = "Sacrifice",
-            description = "血量上限降低（5%/10%/15%）",
-            level = 0
-        },
-        new DebuffData {
-            id = "Fragile",
-            displayName = "Fragile",
-            description = "受到伤害提高（10%/20%/30%）",
-            level = 0
-        },
-        //new DebuffData {
-        //   id = "Wither",
-        //    displayName = "Wither",
-        //   description = "回血效果减少（10%/20%/30%）",
-        //    level = 0
-        //},
-        new DebuffData {
-            id = "Blindness",
-            displayName = "Blindness",
-            description = "视野减少（小/中/大）",
-            level = 0
-        },
-        new DebuffData {
-            id = "Berserk",
-            displayName = "Berserk",
-            description = "失控时间变长（1s/2s/3s）",
-            level = 0
-        }
-    };
+        //InitBuffList();
+        //InitDebuffList();
     }
 
     public void ApplyBuff(string id)
@@ -128,6 +42,7 @@ public class BuffManager : MonoBehaviour
                 id = baseBuff.id,
                 displayName = baseBuff.displayName,
                 description = baseBuff.description,
+                icon = baseBuff.icon,
                 level = 1
             });
         }
@@ -186,6 +101,7 @@ public class BuffManager : MonoBehaviour
                 id = baseDebuff.id,
                 displayName = baseDebuff.displayName,
                 description = baseDebuff.description,
+                icon = baseDebuff.icon,
                 level = 1
             });
         }

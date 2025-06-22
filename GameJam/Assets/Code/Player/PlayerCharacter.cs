@@ -73,6 +73,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         if (!isOverheated && Input.GetKeyDown(KeyCode.Space) && canRoll && moveInput != Vector2.zero)
         {
             StartRoll();
+            animator.SetBool("roll", true);
         }
 
         if (isRolling)
@@ -81,6 +82,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
             if (rollTimer <= 0f)
             {
                 EndRoll();
+                animator.SetBool("roll", false);
             }
         }
     }

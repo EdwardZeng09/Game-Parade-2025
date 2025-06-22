@@ -30,8 +30,8 @@ public class WeaponController : MonoBehaviour
     private float rapidFireMultiplier = 1f;
 
     [Header("MultiShot 散射设置")]
-    public float multiShotDamageFactor = 0f;   // Buff 等级 × 0.1f
-    public float multiShotSpreadAngle = 15f; // 每发子弹偏转角度
+    public float multiShotDamageFactor = 0f;   
+    public float multiShotSpreadAngle = 15f; 
 
     [Header("ExplosiveAmmo Buff 设置")]
     private bool useExplosiveAmmo = false;
@@ -51,7 +51,7 @@ public class WeaponController : MonoBehaviour
     private float baseCoolAmount;
 
     [Header("Berserk Debuff 设置")]
-    private float berserkExtraDuration = 0f; // 由 Debuff 设定：1/2/3 秒
+    private float berserkExtraDuration = 0f; 
     private bool berserkExtraActive = false;
     private float berserkExtraTimer = 0f;
 
@@ -165,6 +165,7 @@ public class WeaponController : MonoBehaviour
                     bComp.SetDirection(extraDir);
                     bComp.SetShooter(gameObject);
                     // 按比例缩减伤害
+
                     bComp.damage *= multiShotDamageFactor;
                 }
                 weaponSpriteController.FlashOnFire();
@@ -218,7 +219,8 @@ public class WeaponController : MonoBehaviour
         var b = bullet.GetComponent<Bullet>();
         b.SetDirection(dir);
         b.SetShooter(gameObject);
-        b.damage *= overclockMultiplier;
+        float baseDmg = GetHeatBasedDamage();
+        b.damage = baseDmg * overclockMultiplier;
         if (useExplosiveAmmo)
         {
             b.EnableExplosive(explosiveRadius, explosiveDamagePercent);
@@ -226,6 +228,14 @@ public class WeaponController : MonoBehaviour
         weaponSpriteController.FlashOnFire();
     }
 
+    private float GetHeatBasedDamage()
+    {
+        if (currentHeat < 20f) return 20f;
+        else if (currentHeat < 40f) return 25f;
+        else if (currentHeat < 60f) return 30f;
+        else if (currentHeat < 80f) return 35f;
+        else return 40f;
+    }
 
     public void ApplyRapidFireBuff(int level)
     {

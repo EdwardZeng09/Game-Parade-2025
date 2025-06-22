@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class UpgradeUI : MonoBehaviour
@@ -19,9 +20,11 @@ public class UpgradeUI : MonoBehaviour
     [Header("UI 显示")]
     public TMP_Text buffPointText;             // 显示剩余 Buff 点数
     public Button continueButton;
+    public TMP_Text descriptionText;
     private BuffManager buffManager;
     private EnemySpawner spawner;
-
+    public Image[] buffIconSlots;    
+    public Image[] debuffIconSlots;
     private List<BuffData> buffOptions;
     private List<DebuffData> debuffOptions;
     private int buffPoints = 0;
@@ -57,7 +60,7 @@ public class UpgradeUI : MonoBehaviour
         // 设置下方随机按钮
         SetupOptionButtons(buffOptionButtons, buffOptions, OnBuffOptionClicked);
         SetupOptionButtons(debuffOptionButtons, debuffOptions, OnDebuffOptionClicked);
-
+        descriptionText.text = "";
         panel.SetActive(true);
     }
 
@@ -114,6 +117,7 @@ public class UpgradeUI : MonoBehaviour
         // 立即刷新顶部
         buffselected = true;
         PopulateSelectedLists();
+        UpdateSelectedIcons();
         buffOptionButtons.ForEach(b => b.interactable = false);
         TryEnableContinue();
     }
@@ -125,6 +129,7 @@ public class UpgradeUI : MonoBehaviour
         // 立即刷新顶部
         debuffselected = true;
         PopulateSelectedLists();
+        UpdateSelectedIcons();
         debuffOptionButtons.ForEach(b => b.interactable = false);
         TryEnableContinue();
     }
@@ -145,11 +150,47 @@ public class UpgradeUI : MonoBehaviour
 
             // extract the displayName statically
             string label;
-            if (data is BuffData bd) label = bd.displayName;
-            else if (data is DebuffData dd) label = dd.displayName;
-            else label = data.ToString();
+            string desc;
+            if (data is BuffData bd)
+            {
+                label = bd.displayName;
+                desc = bd.description;  
+            }
+            else if (data is DebuffData dd)
+            {
+                label = dd.displayName;
+                desc = dd.description;          
+            }
+            else
+            {
+                label = data.ToString();
+                desc = "";
+            }
 
             SetButton(btn, label, () => callback(data, btn));
+            var trigger = btn.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = btn.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Pointer Enter
+            var entryEnter = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerEnter
+            };
+            entryEnter.callback.AddListener((_) => {
+                descriptionText.text = desc;
+            });
+            trigger.triggers.Add(entryEnter);
+
+            // Pointer Exit
+            var entryExit = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerExit
+            };
+            entryExit.callback.AddListener((_) => {
+                descriptionText.text = "";
+            });
+            trigger.triggers.Add(entryExit);
         }
     }
 
@@ -185,6 +226,39 @@ public class UpgradeUI : MonoBehaviour
     {
         panel.SetActive(false);
         spawner.OnUpgradeSelected();// 或者 OnUpgradeSelected()
+    }
+
+    void UpdateSelectedIcons()
+    {
+        // Buff 
+        for (int i = 0; i < buffIconSlots.Length; i++)
+        {
+            if (i < buffManager.activeBuffs.Count)
+            {
+                var data = buffManager.activeBuffs[i];
+                buffIconSlots[i].sprite = data.icon;
+                buffIconSlots[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                buffIconSlots[i].gameObject.SetActive(false);
+            }
+        }
+
+        // Debuff
+        for (int i = 0; i < debuffIconSlots.Length; i++)
+        {
+            if (i < buffManager.activeDebuffs.Count)
+            {
+                var data = buffManager.activeDebuffs[i];
+                debuffIconSlots[i].sprite = data.icon;
+                debuffIconSlots[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                debuffIconSlots[i].gameObject.SetActive(false);
+            }
+        }
     }
 }
 
