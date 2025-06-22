@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossController : MonoBehaviour
 {
@@ -114,6 +115,7 @@ public class BossController : MonoBehaviour
         isDead = true;
         FindObjectOfType<EnemySpawner>().OnEnemyKilled();
         Destroy(gameObject);
+        SceneManager.LoadScene("Succeed");
     }
 
     public void SetAnimation()

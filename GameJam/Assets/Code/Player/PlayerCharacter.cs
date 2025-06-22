@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerCharacter : MonoBehaviour, IDamageable
@@ -138,6 +139,7 @@ public class PlayerCharacter : MonoBehaviour, IDamageable
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            SceneManager.LoadScene("gameover");
         }
         UpdateHealthUI();
     }

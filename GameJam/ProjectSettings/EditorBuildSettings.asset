@@ -14,4 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Update.unity
     guid: 43ea3945b029223478642dd38b07850a
+  - enabled: 1
+    path: Assets/Scenes/gameover.unity
+    guid: 0ed8b90cc2ee39d4a926cfa9f0203d1b
+  - enabled: 1
+    path: Assets/Scenes/Succeed.unity
+    guid: bcb1c844aed9ef74199febb8fa976385
+  - enabled: 1
+    path: Assets/Scenes/Help.unity
+    guid: 2a5287be8c0849c44ba28918205ee945
+  - enabled: 1
+    path: Assets/Scenes/Members.unity
+    guid: 8e5b11e70b13bcf459f46bec8898dc20
   m_configObjects: {}
