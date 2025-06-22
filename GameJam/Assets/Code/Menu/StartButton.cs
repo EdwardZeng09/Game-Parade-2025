@@ -59,4 +59,13 @@ public class StartButton : MonoBehaviour
                 break;
         }
     }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+    }
 }
