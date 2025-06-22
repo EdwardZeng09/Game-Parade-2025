@@ -59,9 +59,9 @@ public class MeleeEnemyController : MonoBehaviour
             rb.velocity = MovementInput * currentSpeed;
 
             //µÐÈË³¯Ïò·­×ª
-            if (MovementInput.x < 0)
-                sr.flipX = true;
             if (MovementInput.x > 0)
+                sr.flipX = true;
+            if (MovementInput.x < 0)
                 sr.flipX = false;
         }
         else

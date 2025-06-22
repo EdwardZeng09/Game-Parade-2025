@@ -44,6 +44,8 @@ public class BossController : MonoBehaviour
     [SerializeField] public float fireDelay = 6f;//弹幕延迟时间
 
 
+
+   public AudioSource AudioSource;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -84,9 +86,9 @@ public class BossController : MonoBehaviour
             rb.velocity = MovementInput * currentSpeed;
 
             //敌人朝向翻转
-            if (MovementInput.x < 0)
-                sr.flipX = true;
             if (MovementInput.x > 0)
+                sr.flipX = true;
+            if (MovementInput.x < 0)
                 sr.flipX = false;
         }
         else
@@ -102,7 +104,7 @@ public class BossController : MonoBehaviour
     {
         Knockback(Player.position);
         animator.SetTrigger("isHurt");
-
+        AudioSource.Play();
     }
     public void Dead()
 

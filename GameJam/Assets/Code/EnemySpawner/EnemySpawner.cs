@@ -89,13 +89,34 @@ public class EnemySpawner : MonoBehaviour
         {
             int randomTile = Random.Range(0, TileWorldPos.Count);
             Vector3 spawnPos = TileWorldPos[randomTile];
-            SpawnEnemy(spawnPos); 
+            SpawnEnemy(spawnPos);
             yield return new WaitForSeconds(spawnDelay);
         }
 
         isSpawning = false;
-        isWaveFinished = true; 
+        isWaveFinished = true;
     }
+
+
+    //// 获取摄像头范围外的随机位置
+    //Vector3 GetRandomPositionOutsideCamera(Vector3 cameraMin, Vector3 cameraMax)
+    //{
+    //    Vector3 spawnPos = Vector3.zero;
+    //    while (true)
+    //    {
+    //        // 随机选择一个地砖位置
+    //        int randomTile = Random.Range(0, TileWorldPos.Count);
+    //        spawnPos = TileWorldPos[randomTile];
+
+    //        // 检查这个位置是否在摄像头范围外
+    //        if (spawnPos.x < cameraMin.x || spawnPos.x > cameraMax.x || spawnPos.y < cameraMin.y || spawnPos.y > cameraMax.y)
+    //        {
+    //            // 确保位置在摄像头范围外
+    //            return spawnPos;
+    //        }
+    //    }
+    //}
+
 
     //加权刷新敌人方法
     public void SpawnEnemy(Vector3 spawnPos)
