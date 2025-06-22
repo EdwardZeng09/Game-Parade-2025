@@ -2114,6 +2114,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5198895231851401096, guid: a3f6170b01ffd04478ba911e87d57793, type: 3}
+      propertyPath: boss
+      value: 
+      objectReference: {fileID: 5816969915320629748, guid: ee4f9731ebe0c3e40a4aa50e479dcd33, type: 3}
+    - target: {fileID: 5198895231851401096, guid: a3f6170b01ffd04478ba911e87d57793, type: 3}
       propertyPath: waveText
       value: 
       objectReference: {fileID: 1593524654}

@@ -41,6 +41,8 @@ public class EnemySpawner : MonoBehaviour
     public GameObject upgradePanel;
     private bool waitingForUpgrade = false;
 
+    public GameObject boss;
+
     void Start()
     {
         tilemap = GetComponent<Tilemap>();
@@ -77,6 +79,10 @@ public class EnemySpawner : MonoBehaviour
         if (currentWave > maxWave) return;
 
         waveText.text = $"Wave {currentWave} / {maxWave}";
+        if (currentWave == 3) 
+        {
+            Instantiate(boss, Vector3.zero, Quaternion.identity);
+        }
         StartCoroutine(SpawnWave());
     }
 
