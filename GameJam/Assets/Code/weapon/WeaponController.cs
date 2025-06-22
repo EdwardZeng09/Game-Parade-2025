@@ -55,6 +55,9 @@ public class WeaponController : MonoBehaviour
     private bool berserkExtraActive = false;
     private float berserkExtraTimer = 0f;
 
+
+    public float CoolDrops=5f;
+
     void Start()
     {
         player = FindObjectOfType<PlayerCharacter>();
@@ -290,5 +293,11 @@ public class WeaponController : MonoBehaviour
     {
         berserkExtraDuration = Mathf.Clamp(level, 1, 3);
         Debug.Log($"[Weapon] ”¶”√ Berserk Debuff °˙ ∂ÓÕ‚ ßøÿ {berserkExtraDuration} √Î");
+    }
+
+    public void PickUpCoolDrops() 
+    {
+        currentHeat -= CoolDrops;
+    
     }
 }

@@ -39,7 +39,11 @@ public class BlueDrops : MonoBehaviour
     }
     private void OnPickup(GameObject player)
     {
-        //Drops¹¦ÄÜ
+        WeaponController weaponController = player.GetComponentInChildren<WeaponController>();
+        if (weaponController != null) 
+        {
+            weaponController.PickUpCoolDrops();
+        }
         return;
       
     }
