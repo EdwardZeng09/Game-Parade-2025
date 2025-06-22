@@ -75,17 +75,14 @@ public class UpgradeUI : MonoBehaviour
             {
                 var data = buffManager.activeBuffs[i];
 
-                // 给Image换图
+                // 换图，隐藏文字
                 var img = btn.GetComponent<Image>();
                 img.sprite = data.icon;
-                img.type = Image.Type.Simple;
                 img.preserveAspect = true;
-
-                // 隐藏文字（如果有Text）
                 var txt = btn.GetComponentInChildren<TMP_Text>();
                 if (txt != null) txt.enabled = false;
 
-                // 交互：只有有点数且没到满级时才能升级
+                // 交互控制
                 btn.interactable = (buffPoints > 0 && data.level < 3);
 
                 // 点击升级
@@ -96,8 +93,33 @@ public class UpgradeUI : MonoBehaviour
                     buffManager.ApplyBuff(data.id);
                     buffPoints--;
                     buffPointText.text = $"Buff Points: {buffPoints}";
-                    UpdateSelectedIcons();
                     PopulateSelectedLists();
+                });
+
+                // —— 新增 Hover 事件 —— 
+                var trigger = btn.GetComponent<EventTrigger>() ?? btn.gameObject.AddComponent<EventTrigger>();
+                trigger.triggers.Clear();
+
+                // Pointer Enter
+                trigger.triggers.Add(new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerEnter,
+                    callback = new EventTrigger.TriggerEvent()
+                });
+                trigger.triggers[^1].callback.AddListener((_) =>
+                {
+                    descriptionText.text = GetLevelText(data);
+                });
+
+                // Pointer Exit
+                trigger.triggers.Add(new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerExit,
+                    callback = new EventTrigger.TriggerEvent()
+                });
+                trigger.triggers[^1].callback.AddListener((_) =>
+                {
+                    descriptionText.text = "";
                 });
 
                 btn.gameObject.SetActive(true);
@@ -108,7 +130,7 @@ public class UpgradeUI : MonoBehaviour
             }
         }
 
-        // 已选 Debuff
+        // 已选 Debuff（同理）
         for (int i = 0; i < selectedDebuffButtons.Count; i++)
         {
             var btn = selectedDebuffButtons[i];
@@ -116,17 +138,12 @@ public class UpgradeUI : MonoBehaviour
             {
                 var data = buffManager.activeDebuffs[i];
 
-                // 给Image换图
                 var img = btn.GetComponent<Image>();
                 img.sprite = data.icon;
-                img.type = Image.Type.Simple;
                 img.preserveAspect = true;
-
-                // 隐藏文字
                 var txt = btn.GetComponentInChildren<TMP_Text>();
                 if (txt != null) txt.enabled = false;
 
-                // 点击升级Debuff，升级时 +1 buffPoint
                 btn.interactable = (data.level < 3);
                 btn.onClick.RemoveAllListeners();
                 btn.onClick.AddListener(() =>
@@ -135,8 +152,30 @@ public class UpgradeUI : MonoBehaviour
                     buffManager.ApplyDebuff(data.id);
                     buffPoints++;
                     buffPointText.text = $"Buff Points: {buffPoints}";
-                    UpdateSelectedIcons();
                     PopulateSelectedLists();
+                });
+
+                var trigger = btn.GetComponent<EventTrigger>() ?? btn.gameObject.AddComponent<EventTrigger>();
+                trigger.triggers.Clear();
+
+                trigger.triggers.Add(new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerEnter,
+                    callback = new EventTrigger.TriggerEvent()
+                });
+                trigger.triggers[^1].callback.AddListener((_) =>
+                {
+                    descriptionText.text = GetLevelText(data);
+                });
+
+                trigger.triggers.Add(new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerExit,
+                    callback = new EventTrigger.TriggerEvent()
+                });
+                trigger.triggers[^1].callback.AddListener((_) =>
+                {
+                    descriptionText.text = "";
                 });
 
                 btn.gameObject.SetActive(true);
@@ -282,6 +321,15 @@ public class UpgradeUI : MonoBehaviour
                 debuffIconSlots[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    string GetLevelText<T>(T dt)
+    {
+        int lvl = (dt is BuffData b) ? b.level : ((DebuffData)(object)dt).level;
+        string name = (dt is BuffData bb) ? bb.displayName : ((DebuffData)(object)dt).displayName;
+        string curr = $"{name} Lv{lvl}";
+        string desc = (dt is BuffData b2) ? b2.description : ((DebuffData)(object)dt).description;
+        return $"{curr} {desc} ";
     }
 }
 
